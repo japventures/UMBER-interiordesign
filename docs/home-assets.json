@@ -1,0 +1,85 @@
+{
+  "assets": [
+    {
+      "contentType": "image/avif",
+      "id": "010c78af08f4ca35",
+      "kind": "image",
+      "name": "03.jpg",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/010c78af08f4ca35.jpg",
+      "url": "https://static.wixstatic.com/media/e535cd_3c24b9e2d8fe41ea9e9e51e81fc32e93~mv2.jpg/v1/fill/w_900,h_1220,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/03.jpg"
+    },
+    {
+      "contentType": "image/avif",
+      "id": "406c07f56e8d01ab",
+      "kind": "image",
+      "name": "Logo%20y%20slogan-06.png",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/406c07f56e8d01ab.png",
+      "url": "https://static.wixstatic.com/media/e535cd_e460fea941c04a9ba7069f737110a933~mv2.png/v1/crop/x_0,y_778,w_2251,h_696/fill/w_356,h_110,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Logo%20y%20slogan-06.png"
+    },
+    {
+      "contentType": "image/avif",
+      "id": "34b83a20b2d25c08",
+      "kind": "image",
+      "name": "e535cd_10af468bf93e4922ad309715c76b87d8~mv2.png",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/34b83a20b2d25c08.png",
+      "url": "https://static.wixstatic.com/media/e535cd_10af468bf93e4922ad309715c76b87d8~mv2.png/v1/fill/w_110,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/e535cd_10af468bf93e4922ad309715c76b87d8~mv2.png"
+    },
+    {
+      "contentType": "image/avif",
+      "id": "ec5e9a029266df9a",
+      "kind": "image",
+      "name": "IMG_5012-HDR.jpg",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/ec5e9a029266df9a.jpg",
+      "url": "https://static.wixstatic.com/media/e535cd_8652c3f0490b41ddb4a02b00fa2395e7~mv2.jpg/v1/fill/w_902,h_876,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_5012-HDR.jpg"
+    },
+    {
+      "contentType": "image/avif",
+      "id": "644923a858c6447a",
+      "kind": "image",
+      "name": "01.jpg",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/644923a858c6447a.jpg",
+      "url": "https://static.wixstatic.com/media/e535cd_7ae559ad867545dd9b03e041b3480a54~mv2.jpg/v1/crop/x_1250,y_0,w_2021,h_2160/fill/w_818,h_874,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/01.jpg"
+    },
+    {
+      "contentType": "image/avif",
+      "id": "15840ea4b875a7b2",
+      "kind": "image",
+      "name": "IMG_0968%20(Sala).jpg",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/15840ea4b875a7b2.jpg",
+      "url": "https://static.wixstatic.com/media/e535cd_de08a11e170d44c7a819bd085f38d3d4~mv2.jpg/v1/fill/w_1004,h_1168,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_0968%20(Sala).jpg"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "4ce8dcd476357c29",
+      "kind": "image",
+      "name": "svg-1",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/4ce8dcd476357c29.svg",
+      "url": "inline-svg:4ce8dcd476357c29"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "f51ac1302f14f7b0",
+      "kind": "image",
+      "name": "svg-2",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/f51ac1302f14f7b0.svg",
+      "url": "inline-svg:f51ac1302f14f7b0"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "72247c7967a4f9b7",
+      "kind": "image",
+      "name": "svg-3",
+      "path": "/var/folders/bt/7yhpskvx3x99t6b01hd8c4bw0000gn/T/browser-use/assets/f10ea6a1-f14f-438a-a07e-4d35e00d79ae/72247c7967a4f9b7.svg",
+      "url": "inline-svg:72247c7967a4f9b7"
+    }
+  ],
+  "failures": [
+    {
+      "contentType": null,
+      "id": "d17043e567dad462",
+      "name": "e535cd_090404e5bc724341839f881a9dd60dcc~mv2.jpg",
+      "reason": "Loaded resource fetch failed: Asset bundling failed; page fetch failed: Browser Use encountered an error interacting with this webpage: TypeError: Failed to fetch\n    at value (https://www.umberinteriordesign.com/:94:5834)\n    at boe (<anonymous>:1:42)\n    at <anonymous>:1:355",
+      "url": "https://static.wixstatic.com/media/e535cd_090404e5bc724341839f881a9dd60dcc~mv2.jpg/v1/fit/w_3840,h_2466,q_90,enc_avif,quality_auto/e535cd_090404e5bc724341839f881a9dd60dcc~mv2.jpg"
+    }
+  ]
+}
