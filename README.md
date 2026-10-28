@@ -1,27 +1,30 @@
 # UMBER Interior Design
 
-Website development for UMBER Interior Design, an interior design firm in the Houston area. Intended domain: umberinteriordesign.com.
+Development version of umberinteriordesign.com, based on the current UMBER website. Public source repository: japventures/UMBER-interiordesign.
 
-## Status
+## Included
 
-Partial local draft based on the current website. Not published, deployed, or connected to Wix, GoDaddy, DNS, or GitHub Pages.
+- Original UMBER logo, warm brown/white palette, editorial home layout, and rotating photography.
+- Eight portfolio projects with local detail pages and image lightboxes.
+- Services, four-stage process, studio/about page, and contact layout.
+- Six FAQ answers and two complete blog articles copied from the current site.
+- Responsive mobile navigation, keyboard-accessible galleries, and reduced-motion support.
+- 64 locally stored, optimized WebP images; original source URLs in docs/asset-manifest.json and docs/home-assets.json.
 
-Repository: `japventures/UMBER-interiordesign` (public). This repository stores the development draft; hosting and migration are pending separate authorization.
+## Preview and hosting
 
-## Files and preview
+Buildless HTML/CSS/JavaScript. Serve this directory with a static HTTP server. Each current website path has an index.html entry so direct links work on static hosting. Asset paths assume the root of a domain; a GitHub project subpath would need base-path configuration. No GitHub Pages workflow or hosting configuration has been activated.
 
-Buildless HTML, CSS, and JavaScript. Serve this directory with a static web server. No installation or build step is required.
+## Deliberately disconnected
 
-The draft includes home, projects, services, about, contact, and a partial FAQ. Five AVIF assets are included; source references are in `docs/home-assets.json`.
+Contact and newsletter forms demonstrate layout and validation but do not transmit or store data. Their preview notices explicitly explain this. Login, client portal, blog comments/likes, and the deactivated Instagram widget are not replicated as operational services. Hosting, forms, subscriber data, analytics, DNS, email, and Wix migration remain separate work.
 
-## Work still required
+## Content review before release
 
-- Compare desktop and mobile layouts against the current website.
-- Import the correct hero image and remaining authorized project photography, including Arethusa.
-- Complete project detail pages, portfolio, FAQ, blog, and remaining original content.
-- Review all brand copy and contact information before release.
-- Configure and verify contact and newsletter integrations. Newsletter is disabled; contact currently uses email, phone, and a link to the existing form.
-- Replace links to the existing website as local pages become available.
-- Decide hosting and preserve existing paths or prepare redirects before migration.
+The current Veneros detail page describes Tapalpa/rural woodland, although its portfolio location is Punta Mita. Its description is preserved for owner review. Arethusa's current detail page has no gallery images; this draft uses its verified portfolio thumbnail. Its location is shown as Houston, USA, consistent with the current portfolio (the source detail page says Houston, Mx.). Existing FAQ terms, pricing, timelines, and portal claims are copied from the source and require business confirmation before launch.
 
-Visual QA has not been completed. The page carries `noindex,nofollow` during development. Publication and migration require separate authorization.
+The original typeface is a licensed DIN family. This draft uses a local system-font fallback until appropriate font licensing/files are available. The home slideshow currently includes three original images rather than the full source rotation.
+
+## Validation
+
+JavaScript syntax checked. Browser-tested at desktop and 390px mobile width; inspected main routes, no horizontal overflow or broken rendered content images found. Navigation, mobile menu, FAQ disclosure, and gallery open/next/close tested. No real forms submitted. This is a reviewable visual replica, not a completed operational migration. Development pages retain noindex,nofollow.
