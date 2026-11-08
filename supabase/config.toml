@@ -1,0 +1,11 @@
+project_id = "umber-portal"
+[auth]
+site_url = "https://japventures.github.io/UMBER-interiordesign/es/portal/"
+additional_redirect_urls = ["https://japventures.github.io/UMBER-interiordesign/es/portal/reset/", "https://japventures.github.io/UMBER-interiordesign/portal/reset/"]
+enable_signup = false
+[auth.email]
+enable_signup = false
+[functions.portal-admin]
+# The function verifies auth.getUser(token) and portal_staff itself. Supports
+# projects using current asymmetric signing keys as well as legacy JWT keys.
+verify_jwt = false
