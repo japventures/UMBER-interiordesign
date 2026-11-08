@@ -47,3 +47,7 @@ Use a single Free Supabase project for initial integration, within the account's
 Run `node tests/portal.test.cjs` from the published source parent workspace using the test's documented path, or adjust its root. Tests currently cover configuration guards, links, portal sections, filters, project switching, team/client separation, escaped comments, selection simulation and Houston daylight-saving transitions. Run `node --check` on each changed JavaScript file.
 
 The transactional Postgres test is supplied but **must be executed in the new UMBER Supabase project**. Mock/UI tests do not prove hosted RLS or Auth. Browser verification must use the published review site if the local preview is unavailable. Keep review noindex; it is not a privacy control.
+
+## Calendar and Gantt
+
+The calendar section has Calendar and Gantt views over the same visible stage/event records. Gantt supports entire-project or month ranges, status bars, event/milestone markers, a today line and detail dialogs. Rows without a start date appear under To be scheduled rather than receiving inferred dates. The normal calendar also shows scheduled stages across their date ranges. Staff can edit stage start/end dates using Houston time. No drag scheduling, dependency automation or notifications are enabled. Existing starts_at/ends_at fields support both views without a new migration. Demo schedule dates are fictional.
