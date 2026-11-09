@@ -1,7 +1,7 @@
 /* Data boundary: demo is explicit; live errors never fall back to sample data. */
 window.UMBERPortalService=(()=>{
  const config=()=>window.UMBER_PORTAL_CONFIG||{};
- const configured=()=>{const c=config();return c.enabled===true&&/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.supabaseUrl)&&typeof c.publishableKey==='string'&&c.publishableKey.length>20&&!c.publishableKey.startsWith('sb_secret_')&&validPublicKey(c.publishableKey);};
+ const configured=()=>{const c=config();return c.enabled===true&&(!c.expectedProjectRef||c.supabaseUrl===`https://${c.expectedProjectRef}.supabase.co`)&&/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.supabaseUrl)&&typeof c.publishableKey==='string'&&c.publishableKey.length>20&&!c.publishableKey.startsWith('sb_secret_')&&validPublicKey(c.publishableKey);};
  function validPublicKey(key){if(key.startsWith('sb_publishable_'))return true;try{return JSON.parse(atob(key.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).role==='anon';}catch{return false;}}
  let clientPromise;
  async function client(){if(!configured())throw Error('PORTAL_NOT_CONFIGURED');if(!clientPromise)clientPromise=import(config().sdkUrl).then(m=>m.createClient(config().supabaseUrl,config().publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'umber-portal-session'}})).catch(e=>{clientPromise=null;throw e;});return clientPromise;}
@@ -11,7 +11,8 @@ window.UMBERPortalService=(()=>{
  const fileUrl=e=>driveUrl(e.data?.drive_url)||safeUrl(e.data?.external_url);
  async function live(){const c=await client();const auth=await c.auth.getUser();if(auth.error?.name==='AuthSessionMissingError'||auth.error?.status===401)return null;const {user}=unwrap(auth);if(!user)return null;const staffRows=unwrap(await c.from('portal_staff').select('user_id').eq('user_id',user.id));return {user,staff:staffRows.length>0};}
  async function projects(){return unwrap(await (await client()).from('portal_projects').select('*').order('created_at',{ascending:false}));}
- async function projectData(id){const c=await client();const results=await Promise.all([c.from('portal_entries').select('*').eq('project_id',id).order('position').order('created_at'),c.from('portal_comments').select('*').eq('project_id',id).order('created_at'),c.from('portal_decisions').select('*').eq('project_id',id),c.from('portal_members').select('project_id,user_id,role').eq('project_id',id)]);return {entries:unwrap(results[0]),comments:unwrap(results[1]),decisions:unwrap(results[2]),members:unwrap(results[3])};}
+ function scopeProjectData(id,result){for(const name of ['entries','comments','decisions','members']){if(!Array.isArray(result[name])||result[name].some(row=>row.project_id!==id))throw Error('PROJECT_SCOPE_MISMATCH');}const ids=new Set(result.entries.map(row=>row.id));if(result.comments.some(row=>row.entry_id&&!ids.has(row.entry_id))||result.decisions.some(row=>!ids.has(row.entry_id)))throw Error('PROJECT_SCOPE_MISMATCH');return result;}
+ async function projectData(id){const c=await client();const results=await Promise.all([c.from('portal_entries').select('*').eq('project_id',id).order('position').order('created_at'),c.from('portal_comments').select('*').eq('project_id',id).order('created_at'),c.from('portal_decisions').select('*').eq('project_id',id),c.from('portal_members').select('project_id,user_id,role').eq('project_id',id)]);return scopeProjectData(id,{entries:unwrap(results[0]),comments:unwrap(results[1]),decisions:unwrap(results[2]),members:unwrap(results[3])});}
  async function signIn(email,password){return unwrap(await (await client()).auth.signInWithPassword({email,password}));}
  async function signOut(){return unwrap(await (await client()).auth.signOut());}
  async function reset(email,redirectTo){return unwrap(await (await client()).auth.resetPasswordForEmail(email,{redirectTo}));}
@@ -21,5 +22,5 @@ window.UMBERPortalService=(()=>{
  async function comment(row){return unwrap(await (await client()).from('portal_comments').insert(row).select().single());}
  async function decide(row){return unwrap(await (await client()).from('portal_decisions').upsert(row,{onConflict:'entry_id,user_id'}).select().single());}
  async function admin(body){return unwrap(await (await client()).functions.invoke('portal-admin',{body}));}
- return {configured,client,live,projects,projectData,signIn,signOut,reset,password,saveProject,saveEntry,comment,decide,admin,safeUrl,driveUrl,fileUrl};
+ return {scopeProjectData,configured,client,live,projects,projectData,signIn,signOut,reset,password,saveProject,saveEntry,comment,decide,admin,safeUrl,driveUrl,fileUrl};
 })();
