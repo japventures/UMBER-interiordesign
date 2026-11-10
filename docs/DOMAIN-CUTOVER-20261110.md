@@ -11,7 +11,7 @@ Baseline local integration: `539cacbacb4f5c5f35cf15d99214fc5181da870a`.
 Remote review commit: `6b677e8099a5e274c547fba57557aadd66b231b2` on `qa/integrated-editorial-emojis-20261110`.
 The GitHub Git-commit API and local Git both report baseline tree `ea425a6c9edf5405373c459e5ee006493b524a2e`.
 
-No DNS, domain transfer, Pages settings, deployment, CNAME, hosted Supabase configuration, Google settings, email, live accounts or client data were changed. All pages retain `noindex,nofollow`. The contact form remains a non-sending preview. This is routing preparation, not production acceptance.
+No DNS, domain transfer, Pages settings, deployment, CNAME, hosted Supabase configuration, Google settings, email, live accounts or client data were changed. All pages retain `noindex,nofollow`. The initial routing baseline had a non-sending contact preview; the later staged Formspree integration is documented in [CONTACT-FORMSPREE-20261110.md](CONTACT-FORMSPREE-20261110.md), with browser and real-delivery acceptance still pending. This is routing preparation, not production acceptance.
 
 ## Code changes
 
@@ -89,7 +89,7 @@ Read their deployed configuration before editing. The Google Picker uses `locati
 ## Future cutover checklist
 
 1. Obtain approval for the final source revision, publication and domain/security settings. Keep `noindex` until its separate release decision; never remove it just because DNS is pointed.
-2. Run the blocked browser checks and settle whether a non-sending contact form is acceptable or needs a separately authorized working delivery flow.
+2. Run the blocked browser checks and verify the staged Formspree flow with one separately authorized delivery test; confirm receipt at the studio inbox before production acceptance.
 3. Verify the DNS provider currently authoritative for the domain. A registrar transfer and a DNS-hosting change are separate operations. Snapshot the current zone and Pages settings for rollback. Preserve MX, SPF, DKIM, DMARC and verification records.
 4. Reconcile the Auth, Edge Function and Google origin/callback settings above through authorized account access. Verify that the existing private access controls still hold.
 5. Configure the custom domain and its verification/HTTPS in GitHub Pages, and publish the approved revision using the current deployment method. Do not assume pushing a review branch changes the site. Add CNAME only as part of that approved setup if branch publishing requires it.

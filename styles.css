@@ -60,3 +60,6 @@ header,footer{color:var(--umber-slate)}
 .selected-section h2,.selected-section h3,.studio-editorial h2,.minimal-contact h2,
 .page>h1,.studio-page h2,.service-grid h2,.service-grid h3,
 .unified-project .case-top h1,.case-narrative h2{color:var(--umber-terracotta)}
+
+/* Contact controls remain unusable until the safe POST handler is ready. */
+.contact-fields{min-width:0;margin:0}.contact-fields:disabled{opacity:.65}.contact button:disabled{cursor:wait}.form-unavailable,.form-status{overflow-wrap:anywhere}

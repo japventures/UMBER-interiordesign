@@ -18,3 +18,5 @@ Tests resolve files relative to their own directory and use a fixed fictional ca
 GitHub Pages currently uses main / root with .nojekyll. The staged domain-readiness version derives its mount from each page's pinned relative base, supporting both the project preview and a custom-domain root. It has not been published and does not change Wix, umberinteriordesign.com, DNS or email. See docs/DOMAIN-CUTOVER-20261110.md for verification, remaining release gates and exact callback/origin preparation.
 
 64 optimized WebP images are reused from the existing public portfolio. Source references and content discrepancies remain documented. Production SEO/GEO, final content review, backend/authentication and domain migration remain separate work.
+
+The staged contact form now submits through Formspree to the studio workflow for `info@umberinteriordesign.com`, with ES/EN validation, safe failure states and no-JavaScript protection. This branch is not deployed. Local mock checks pass; real browser and inbox delivery acceptance remain outstanding. See [contact integration verification](docs/CONTACT-FORMSPREE-20261110.md).
