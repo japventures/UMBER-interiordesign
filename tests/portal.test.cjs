@@ -1,10 +1,15 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const root='work/umber-pages/';
+const root=require('node:path').resolve(__dirname,'..')+'/';
+// Fixed fictional clock keeps calendar assertions independent of today's date.
+const RealDate=Date;
+class FixtureDate extends RealDate { constructor(...args){super(...(args.length?args:['2026-11-09T16:00:00Z']));} static now(){return RealDate.parse('2026-11-09T16:00:00Z');} }
 const events={},mount={innerHTML:''},bodyClasses=new Set();
 let path='/UMBER-interiordesign/es/portal/demo/';
 const document={getElementById:id=>id==='umber-portal'?mount:null,addEventListener:(name,fn)=>events[name]=fn,body:{classList:{add:v=>bodyClasses.add(v),remove:v=>bodyClasses.delete(v)}},querySelector:()=>null};
-const context={window:{},document,location:{get pathname(){return path},origin:'https://japventures.github.io'},URL,Intl,Date,atob,Blob,setTimeout,clearTimeout,FormData:class {constructor(form){this.values=form.values}*[Symbol.iterator](){yield*Object.entries(this.values)}}};
-vm.createContext(context);for(const f of ['config.js','portal-config.js','portal-demo-data.js','portal-service.js','portal.js'])vm.runInContext(fs.readFileSync(root+f,'utf8'),context,{filename:f});
+const context={window:{},document,location:{get pathname(){return path},origin:'https://japventures.github.io',hash:''},URL,URLSearchParams,Intl,Date:FixtureDate,atob,Blob,setTimeout,clearTimeout,FormData:class {constructor(form){this.values=form.values}*[Symbol.iterator](){yield*Object.entries(this.values)}}};
+vm.createContext(context);for(const f of ['config.js','portal-demo-data.js','portal-service.js','portal.js'])vm.runInContext(fs.readFileSync(root+f,'utf8'),context,{filename:f});
+// Never load deployed credentials/config or contact a live backend in these tests.
+context.window.UMBER_PORTAL_CONFIG={enabled:false};
 const P=context.window.UMBERPortal,S=context.window.UMBERPortalService;
 const html=()=>mount.innerHTML;
 async function click(selector,dataset={}){const b={dataset,matches:s=>s===selector};await events.click({target:{closest:()=>b}});await Promise.resolve();}
@@ -16,7 +21,7 @@ async function submit(type,values){const form={dataset:{upForm:type},values,clos
  const key=Buffer.from(JSON.stringify({role:'service_role'})).toString('base64');context.window.UMBER_PORTAL_CONFIG={enabled:true,supabaseUrl:'https://test.supabase.co',publishableKey:'header.'+key+'.signature'};assert.equal(S.configured(),false,'Secret role keys rejected');
  context.window.UMBER_PORTAL_CONFIG={enabled:false};
  path='/UMBER-interiordesign/es/portal/';await P.mount('/portal');assert.ok(html().includes('ACCESO AÚN NO HABILITADO'));assert.ok(!html().includes('name="password"'),'No credential collection before configuration');
- path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMOSTRACIÓN'));assert.ok(html().includes('2 / 8'));assert.ok(html().includes('The Woodlands'));assert.ok(!html().includes('Presupuesto interno de ejemplo'));
+ path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMOSTRACIÓN'));assert.ok(html().includes('PENDIENTES POR REVISAR'));assert.ok(html().includes('Desarrollo y visualización'));assert.ok(html().includes('The Woodlands'));assert.ok(!html().includes('Presupuesto interno de ejemplo'));
  for(const tab of ['stages','calendar','documents','design','selections','invoices','updates','messages']){await click('[data-up-tab]',{upTab:tab});assert.ok(html().includes('data-up-tab="'+tab+'" aria-current="page"'),tab+' renders');assert.ok(!/undefined|NaN/.test(html()),tab+' has valid output');}
  await click('[data-up-tab]',{upTab:'documents'});await change('up-doc-filter','contract');assert.ok(html().includes('Contrato de servicios'));assert.ok(!html().includes('Distribución general'));
  await click('[data-up-tab]',{upTab:'calendar'});await click('[data-up-month]',{upMonth:'1'});await click('[data-up-month]',{upMonth:'1'});assert.ok(html().includes('enero de 2027'));
@@ -32,7 +37,7 @@ async function submit(type,values){const form={dataset:{upForm:type},values,clos
  await submit('invite',{email:'fake@example.test',role:'client'});assert.ok(html().includes('No se envió ningún correo'));
  await change('up-project','demo-hospitality');await click('[data-up-tab]',{upTab:'design'});assert.ok(html().includes('Concepto restaurante'));assert.ok(!html().includes('Sala principal'),'Project switch does not leak previous entries');
  await click('[data-up-role]');assert.ok(!html().includes('data-up-tab="team"'));
- path='/UMBER-interiordesign/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMONSTRATION'));assert.ok(html().includes('Stage completion, not physical construction progress.'));
+ path='/UMBER-interiordesign/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMONSTRATION'));assert.ok(html().includes('ITEMS TO REVIEW'));assert.ok(html().includes('NEXT APPOINTMENT'));
  await P.mount('/');assert.ok(!bodyClasses.has('umber-portal-page'));
  console.log('PASS: Gantt/calendar switching, clipped ranges, milestones, unscheduled stages, shared calendar data, disabled login, public-key guard, safe links, 9 sections, document filter, year rollover, Houston DST, XSS escaping, demo decisions/invitations, team-only drafts, project isolation and EN/ES UI.');
 })().catch(e=>{console.error(e);process.exitCode=1});
