@@ -1,0 +1,15 @@
+# Blog label regression
+
+The section is named **Blog** in English and Spanish, including navigation in the client portal. Its existing `/blog`, `/es/blog` and article routes are unchanged.
+
+The static HTML already said `BLOG`. The translation dictionary still mapped `JOURNAL` to `BLOG`, so its reverse lookup silently replaced the correct label with `JOURNAL` when English was applied. The dictionary now maps `BLOG` to itself. All 47 static shells request the updated translator, and both static blog titles now identify Blog rather than Home.
+
+## Verification
+
+- `node --test tests/*.test.cjs`: 36 tests passed.
+- `node tests/portal.test.cjs`: passed.
+- `node --check i18n.js`, `node --check tests/blog-label-browser.cjs` and `git diff --check`: passed.
+- The focused eight-test suite exercises the real translator with English and Spanish initial states, repeated language changes, blog/portal/article paths, header/footer labels, canonical/hreflang links, and all 47 static shells. Reintroducing the old dictionary entry makes all six runtime cases fail; restoring the fix makes all eight tests pass.
+- `CHROMIUM_PATH=/usr/bin/chromium node tests/blog-label-browser.cjs`: blocked before any page loaded. Chromium's local socket was denied by the execution environment (`Operation not permitted`). No browser assertions or visual checks are reported as passed. This optional test covers direct loads, repeated toggles and back/forward at 390px and 1440px with external requests blocked and the live backend disabled.
+
+This change is for a review branch only. It does not deploy the site or change the domain, email, backend or access settings. The separate domain-readiness branch needs the same dictionary replacement and translator cache refresh, applied without replacing its route/base-path changes.
