@@ -6,7 +6,7 @@ function fixture(download=async()=>new Blob([Uint8Array.from([255,216,255,0])]))
  const doc={body:{classList:classList(),append(d){d.isConnected=true;nodes[d.id]=d}},getElementById:id=>id==='umber-portal'?mount:nodes[id]||null,addEventListener:(e,f)=>events[e]=f,querySelector:()=>null,querySelectorAll:()=>inline,createElement(tag){const d={tagName:tag,classList:classList(),isConnected:true,setAttribute(){},append(x){this.children??=[];this.children.push(x)},replaceChildren(){this.children=[]},addEventListener(){},showModal(){},close(){this.isConnected=false;delete nodes[this.id]},remove(){this.close()},querySelector(){return this.target??=( {children:[],replaceChildren(){this.children=[]},append(x){this.children.push(x)}} )}};return d;}};
  const entry={id:'entry-1',project_id:'a',kind:'render',title:'Private rendering',description:'',visibility:'client',status:'review',data:{drive_file_id:'fictional-file-12345',file_name:'render.jpg'}};
  const api={configured:()=>true,live:async()=>({user:{id:'client'},staff:false}),projects:async()=>[{id:'a',name:'A'},{id:'b',name:'B'}],projectData:async id=>({entries:id==='a'?[entry,{...entry,id:'hidden',visibility:'team'}]:[],comments:[],decisions:[],members:[{project_id:id,user_id:'client',role:'client'}]}),scopeProjectData:(_,r)=>r,fileUrl:()=>null,driveUrl:()=>null,downloadEntry:async id=>{calls++;return download(id)},client:async()=>({auth:{onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}})}}),signOut:async()=>({localOnly:false})};
- const context={window:{UMBER_BASE:'',UMBERPortalService:api},umberRoutePath:p=>p,document:doc,location:{pathname:'/portal/',hash:''},URL:{createObjectURL(blob){const u='blob:test-'+created.length;created.push({url:u,type:blob.type});return u},revokeObjectURL:u=>revoked.push(u)},Intl,Date,Blob,Uint8Array,queueMicrotask,setTimeout,clearTimeout};
+ const context={window:{UMBER_BASE:'',UMBERPortalService:api},umberRoutePath:p=>p,document:doc,location:{pathname:'/portal/',hash:''},URL:class extends URL{static createObjectURL(blob){const u='blob:test-'+created.length;created.push({url:u,type:blob.type});return u} static revokeObjectURL(u){revoked.push(u)}},Intl,Date,Blob,Uint8Array,queueMicrotask,setTimeout,clearTimeout};
  vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../portal.js'),'utf8'),context);
  async function click(selector,dataset={}){await events.click({target:{closest:()=>({dataset,matches:s=>s===selector})}});await tick();}
  return {P:context.window.UMBERPortal,mount,nodes,entry,created,revoked,get inline(){return inline},get calls(){return calls},click,async changeProject(id){await events.change({target:{id:'up-project',value:id}});await tick();}};
@@ -30,4 +30,9 @@ test('PDF opens in a private inline viewer; text is rendered literally',async()=
 });
 test('unsupported preview fails safely while download remains available',async()=>{
  const f=fixture(async()=>new Blob(['<html>not an image</html>']));await f.P.mount('/portal');await f.click('[data-up-tab]',{upTab:'design'});assert.equal(f.created.length,0);assert.match(f.inline[0].status.textContent,/Preview is unavailable/);assert.ok(f.mount.innerHTML.includes('data-up-download="entry-1"'));
+});
+test('Mercury links reject lookalikes, credentials, insecure schemes and custom ports',()=>{
+ const {P}=fixture();
+ assert.equal(P.mercuryPaymentUrl('https://app.mercury.com/invoice/example'),'https://app.mercury.com/invoice/example');
+ for(const url of ['http://app.mercury.com/x','https://mercury.com.evil.test/x','https://evilmercury.com/x','https://user:secret@mercury.com/x','https://mercury.com:8443/x','javascript:alert(1)',''])assert.equal(P.mercuryPaymentUrl(url),null);
 });
