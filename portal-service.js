@@ -21,6 +21,13 @@ window.UMBERPortalService=(()=>{
  async function saveEntry(row){const c=await client();return unwrap(await (row.id?c.from('portal_entries').update(row).eq('id',row.id):c.from('portal_entries').insert(row)).select().single());}
  async function comment(row){return unwrap(await (await client()).from('portal_comments').insert(row).select().single());}
  async function decide(row){return unwrap(await (await client()).from('portal_decisions').upsert(row,{onConflict:'entry_id,user_id'}).select().single());}
+ async function downloadEntry(entryId){
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(entryId))throw Error('INVALID_FILE');
+  const c=await client();const {data,error}=await c.functions.invoke('portal-drive',{body:{action:'download',entry_id:entryId}});
+  if(error)throw error;if(!(data instanceof Blob)||data.type.split(';')[0]!=='application/octet-stream'||!data.size||data.size>25*1024*1024)throw Error('INVALID_FILE_RESPONSE');
+  return data;
+ }
  async function admin(body){return unwrap(await (await client()).functions.invoke('portal-admin',{body}));}
- return {scopeProjectData,configured,client,live,projects,projectData,signIn,signOut,reset,password,saveProject,saveEntry,comment,decide,admin,safeUrl,driveUrl,fileUrl};
+ return {scopeProjectData,configured,client,live,projects,projectData,signIn,signOut,reset,password,saveProject,saveEntry,comment,decide,downloadEntry,admin,safeUrl,driveUrl,fileUrl};
 })();
+

@@ -30,7 +30,7 @@ window.UMBERPortal=(()=>{
  const tag=(value)=>`<span class="up-tag up-tag-${h(value)}">${label(value)}</span>`;
  const visibilityTag=e=>state.team&&e.visibility==='team'?`<span class="up-tag">${t('Borrador · solo equipo','Draft · team only')}</span>`:'';
  const edit=e=>state.team?`<button class="up-icon" type="button" data-up-edit="${h(e.id)}" aria-label="${t('Editar','Edit')} ${h(e.title)}">${t('Editar','Edit')} ↗</button>`:'';
- const attachment=e=>{const link=api().fileUrl(e),isDrive=!!api().driveUrl(e.data?.drive_url);return link?`<a class="up-file" href="${h(link)}" target="_blank" rel="noopener noreferrer" data-native>${t(isDrive?'Abrir en Drive':'Abrir recurso',isDrive?'Open in Drive':'Open resource')} ↗</a>${isDrive?`<small class="up-muted">${t('Drive verifica también tus permisos de Google.','Drive also verifies your Google permissions.')}</small>`:''}`:`<small class="up-muted">${t('Sin archivo adjunto','No attachment')}</small>`;};
+ const attachment=e=>{if(state.mode==='live'&&/^[A-Za-z0-9_-]{10,200}$/.test(e.data?.drive_file_id||''))return `<button class="up-file" type="button" data-up-download="${h(e.id)}">${t('Descargar archivo','Download file')} ↓</button>`;const link=api().fileUrl(e),isDrive=!!api().driveUrl(e.data?.drive_url);return link?`<a class="up-file" href="${h(link)}" target="_blank" rel="noopener noreferrer" data-native>${t(isDrive?'Abrir en Drive':'Abrir recurso',isDrive?'Open in Drive':'Open resource')} ↗</a>${isDrive?`<small class="up-muted">${t('Drive verifica también tus permisos de Google.','Drive also verifies your Google permissions.')}</small>`:''}`:`<small class="up-muted">${t('Sin archivo adjunto','No attachment')}</small>`;};
  const commentLink=e=>`<button class="up-text-button" type="button" data-up-comment="${h(e.id)}">${t('Comentarios','Comments')} (${state.comments.filter(c=>c.entry_id===e.id).length})</button>`;
  const entryCard=e=>`<article class="up-card"><div class="up-row"><p class="eyebrow">${t(...kinds[e.kind])}${e.data?.room?' · '+h(e.data.room):''}</p>${tag(e.status)}${visibilityTag(e)}</div><h2>${h(e.title)}</h2><p class="up-body">${h(e.description)}</p>${e.data?.version?`<p class="up-muted">${h(e.data.version)}</p>`:''}<div class="up-card-actions">${attachment(e)}${commentLink(e)}${edit(e)}</div></article>`;
  const stateHtml=()=>`${state.notice?`<p class="up-notice" role="status">${h(state.notice)}</p>`:''}${state.error?`<p class="up-error" role="alert">${h(state.error)}</p>`:''}`;
@@ -71,6 +71,23 @@ window.UMBERPortal=(()=>{
  function newProject(){if(!state.team)return;dialog(t('Nuevo proyecto','New project'),`<form data-up-form="project">${field(t('Nombre del proyecto','Project name'),'name','','text',true).replace('maxlength="200"','maxlength="160"')}${field(t('Ubicación','Location'),'location')}${field(t('Inicio','Start'),'start_date','','date')}${field(t('Entrega estimada','Estimated handover'),'target_date','','date')}<button class="up-primary">${t('Crear proyecto','Create project')}</button></form>`);}
  function decisionDialog(id,value){const e=visible().find(e=>e.id===id);if(!e||!canWrite())return;dialog(t(value==='approved'?'Confirmar selección de diseño':'Solicitar cambios',value==='approved'?'Confirm design selection':'Request changes'),`<h3>${h(e.title)}</h3><p>${t('Esta decisión queda registrada en el proyecto. No autoriza una compra ni un pago.','This decision is recorded in the project. It does not authorize a purchase or payment.')}</p><form data-up-form="decision"><input type="hidden" name="entry_id" value="${h(id)}"><input type="hidden" name="decision" value="${value}"><label>${t('Comentario','Comment')}<textarea name="note" rows="3" maxlength="2000" ${value==='changes_requested'?'required':''}></textarea></label><button class="up-primary">${state.mode==='demo'?t('Simular decisión','Simulate decision'):t('Registrar decisión','Record decision')}</button></form>`);}
  function ics(e){if(!e?.starts_at)return;const stamp=v=>new Date(v).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z/,'Z');const escape=v=>String(v||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');const content=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//UMBER//Client Portal//EN','BEGIN:VEVENT','UID:'+e.id+'@umberinteriordesign.com','DTSTAMP:'+stamp(new Date()),'DTSTART:'+stamp(e.starts_at),...(e.ends_at?['DTEND:'+stamp(e.ends_at)]:[]),'SUMMARY:'+escape(e.title),'DESCRIPTION:'+escape(e.description),'LOCATION:'+escape(e.data?.location),'END:VEVENT','END:VCALENDAR'].join('\r\n');const object=URL.createObjectURL(new Blob([content],{type:'text/calendar;charset=utf-8'}));const a=document.createElement('a');a.href=object;a.download='umber-event.ics';a.dataset.native='true';a.click();setTimeout(()=>URL.revokeObjectURL(object),1000);}
+ async function downloadAttachment(button){
+  if(state.mode!=='live'||!state.user||state.busy||state.projectError||button.disabled)return;
+  const entry=visible().find(row=>row.id===button.dataset.upDownload);if(!entry?.data?.drive_file_id)return;
+  const ticket=epoch,projectId=state.selected,userId=state.user.id,original=button.textContent;
+  button.disabled=true;button.textContent=t('Descargando…','Downloading…');
+  try{
+   const blob=await api().downloadEntry(entry.id);
+   if(ticket!==epoch||!mountNode()||state.user?.id!==userId||state.selected!==projectId||!visible().some(row=>row.id===entry.id))return;
+   const name=String(entry.data.file_name||entry.title||'UMBER-file').replace(/[\u0000-\u001f\u007f/\\]/g,'_').slice(0,180);
+   const object=URL.createObjectURL(blob),a=document.createElement('a');a.href=object;a.download=name;a.dataset.native='true';
+   try{a.click();}finally{setTimeout(()=>URL.revokeObjectURL(object),1000);}
+  }catch(error){
+   if(ticket!==epoch||state.user?.id!==userId||state.selected!==projectId)return;
+   const status=error?.context?.status;
+   state.error=status===404||status===403?t('El archivo ya no está disponible para tu acceso. Actualiza el proyecto o contacta al estudio.','This file is no longer available to your account. Refresh the project or contact the studio.'):status===409?t('El estudio debe volver a conectar Google Drive para descargar este archivo.','The studio needs to reconnect Google Drive to download this file.'):t('No se pudo descargar el archivo. Vuelve a intentarlo o contacta al estudio.','Unable to download the file. Try again or contact the studio.');draw();
+  }finally{button.disabled=false;button.textContent=original;}
+ }
  async function refresh(){if(state.selected)await loadProject(state.selected,{keepNotice:true});else draw();}
  async function submit(form){if(loading)return;loading=true;const type=form.dataset.upForm,data=Object.fromEntries(new FormData(form)),dialogStatus=form.closest('dialog')?.querySelector('[data-up-dialog-status]');const button=form.querySelector('button[type=submit],button:not([type])');if(button)button.disabled=true;state.error='';state.notice='';try{
   if(type==='login'){await api().signIn(data.email.trim(),data.password);await mount(accessPath());return;}
@@ -87,6 +104,7 @@ window.UMBERPortal=(()=>{
  document.addEventListener('input',e=>{if(e.target.name==='body'&&e.target.closest('[data-up-form=comment]'))commentDrafts[draftKey()]=e.target.value;});
  document.addEventListener('change',e=>{if(['up-room-filter','up-selection-room'].includes(e.target.id)){state.room=e.target.value;draw();return;}if(e.target.id==='up-thread'){if(e.target.value&&!visible().some(row=>row.id===e.target.value))return;state.context=e.target.value||null;draw();return;}if(e.target.name==='kind'&&e.target.closest('[data-up-form=entry]'))shapeEditor(e.target.form);if(e.target.id==='up-project'){if(loading){e.target.value=state.selected;return;}state.context=null;loadProject(e.target.value);}if(['up-doc-filter','up-design-filter'].includes(e.target.id)){state.filter=e.target.value;draw();}});
  document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.matches('[data-up-download]')){await downloadAttachment(b);return;}
   if(b.matches('[data-up-retry]')){await refresh();return;}
   if(b.matches('[data-up-tab]')){state.tab=b.dataset.upTab;state.filter='all';state.room='all';state.context=null;state.notice='';state.error='';draw();document.getElementById('up-section-heading')?.focus({preventScroll:true});return;}
   if(b.matches('[data-up-role]')&&state.mode==='demo'){state.team=!state.team;state.user={id:state.team?'demo-team':'demo-client',email:'demo@umber.example'};if(state.tab==='team')state.tab='overview';draw();return;}
@@ -111,3 +129,4 @@ window.UMBERPortal=(()=>{
  });
  return {landing,demo,mount,formatDate:dates,formatMoney:money,houstonLocal,fromHouston,scheduleRows,ganttLayout};
 })();
+
