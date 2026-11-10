@@ -4,8 +4,19 @@ Review URL: https://japventures.github.io/UMBER-interiordesign/es/
 
 This is a public review version. Homepage and San Francisco Ranch have an editorial design and ESP/ENG switch. Spanish translation of remaining legacy content is still in progress. Noindex is retained for review; it does not make this site private.
 
-The client portal has an isolated fictional sandbox and a prepared Supabase adapter. Live authentication is intentionally disabled until a separate UMBER Free project is created in the owner's existing Supabase account, the migration/RLS tests pass, and staff/SMTP/redirects are configured. No real accounts, private files or invitation emails have been activated. See docs/PORTAL-SETUP.md. Do not upload client documents or secrets to this public repository.
+The client portal has a fictional sandbox and an enabled Supabase adapter. The checked-in configuration targets UMBER's separate project `nsugfmibvlrifcrvmsex`; it must not be treated as an unconfigured template or connected to another company's project. `review-version.json` records earlier real-account walkthroughs, but it is not independent evidence that all production access controls and integrations are ready. Private Drive delivery, external integrations and mobile visual acceptance still need verification. See docs/PORTAL-SETUP.md and docs/CLOUD-QA-20261109.md. Do not upload client documents or secrets to this public repository.
 
-GitHub Pages uses main / root with .nojekyll. config.js declares the project base path. Deployment-specific files were prepared from the local review source. This publication does not change Wix, umberinteriordesign.com, DNS or email.
+Offline regression tests (no real accounts, mail or backend requests):
+
+```sh
+node tests/portal.test.cjs
+node --test tests/portal-service.test.cjs
+```
+
+Tests resolve files relative to their own directory and use a fixed fictional calendar date. They do not depend on the production portal configuration.
+
+GitHub Pages currently uses main / root with .nojekyll. The staged domain-readiness version derives its mount from each page's pinned relative base, supporting both the project preview and a custom-domain root. It has not been published and does not change Wix, umberinteriordesign.com, DNS or email. See docs/DOMAIN-CUTOVER-20261110.md for verification, remaining release gates and exact callback/origin preparation.
 
 64 optimized WebP images are reused from the existing public portfolio. Source references and content discrepancies remain documented. Production SEO/GEO, final content review, backend/authentication and domain migration remain separate work.
+
+The staged contact form now submits through Formspree to the studio workflow for `info@umberinteriordesign.com`, with ES/EN validation, safe failure states and no-JavaScript protection. This branch is not deployed. Local mock checks pass; real browser and inbox delivery acceptance remain outstanding. See [contact integration verification](docs/CONTACT-FORMSPREE-20261110.md).
