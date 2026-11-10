@@ -70,3 +70,7 @@
 .up-selection-no-photo{display:inline-block;width:64px;padding:12px 4px;text-align:center;font-size:11px;color:var(--umber-olive,#605e4d);background:var(--umber-coconut,#e3dfd3)}
 .up-selection-list:focus-visible{outline:2px solid var(--umber-terracotta,#875f45);outline-offset:3px}
 @media(max-width:750px){.up-selection-list{padding:12px}.up-selection-table .up-decision button{min-height:44px}}
+
+/* Stage-linked deliverables and reference budgets. */
+.up-deliverables{list-style:none;padding:0;margin:1rem 0}.up-deliverables li{padding:1rem 0;border-top:1px solid var(--line,#d4d0c5);overflow-wrap:anywhere}.up-deliverables strong{display:block}.up-workflow-meta p{margin:.45rem 0}.up-stage-dependency{padding:.8rem;border-left:2px solid #875f45;background:#faf9f5}.up-budget-summary{margin-bottom:1rem}.up-budget-groups{display:flex;flex-wrap:wrap;gap:1rem 3rem}.up-budget-groups>div{min-width:0;max-width:100%}.up-stage-content{min-width:0}.up-stage-content h3{font-size:1rem;margin-top:1.4rem}.up-deliverables .up-card-actions{flex-wrap:wrap}
+@media(max-width:600px){.up-budget-groups{display:block}.up-budget-groups>div+div{border-top:1px solid #d4d0c5;margin-top:1rem;padding-top:1rem}.up-deliverables .up-card-actions{display:flex;gap:.5rem}.up-stage-dependency{font-size:.9rem}}
