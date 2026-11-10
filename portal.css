@@ -78,3 +78,20 @@
 .up-approval{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .75rem;border:1px solid;border-radius:4px;font-size:.85rem;font-weight:600;line-height:1.3;white-space:normal}.up-approval::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:currentColor;flex-shrink:0}.up-approval-pending{background:#fff3cc;border-color:#b88900;color:#6b4b00}.up-approval-approved{background:#e3f3e8;border-color:#34734a;color:#205734}.up-approval-changes_requested{background:#fde6e4;border-color:#a13b36;color:#8a2520}.up-approve-form{display:flex;margin:0}.up-decision .up-approve-button{background:#28633e;border:1px solid #28633e;color:#fff;min-height:44px}.up-decision .up-approve-button:disabled{opacity:1;background:#e3f3e8;color:#205734;border-color:#34734a;cursor:default}.up-decision .up-changes-button{color:#8a2520;border:1px solid #a13b36;min-height:44px;background:#fff7f6}.up-client-vote{font-size:.85rem;overflow-wrap:anywhere}.up-decision{display:flex;flex-wrap:wrap;gap:.5rem}
 
 .up-selection-table th[scope=row] p{text-transform:none;letter-spacing:normal;font-weight:400;font-size:.9rem}
+
+/* Portal dialogs must not inherit the public gallery's full-screen layout. */
+dialog.up-dialog{height:auto;min-height:0;box-sizing:border-box;margin:auto;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
+.up-dialog button{position:static;z-index:auto;font:400 14px/1.4 Arial,Helvetica,sans-serif}
+.up-dialog .up-dialog-header{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:start;gap:16px;margin-bottom:20px}
+.up-dialog .up-dialog-header h2{margin:8px 0 0;overflow-wrap:anywhere}
+.up-dialog .up-dialog-close{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;background:transparent;color:#66513c;font-size:28px;cursor:pointer}
+.up-dialog .up-primary{background:#554535;color:#fffdf9;border:1px solid #554535}
+.up-dialog .up-secondary{background:transparent;color:#483b2f;border:1px solid #a99986}
+.up-dialog.up-decision-dialog{width:calc(100% - 32px);max-width:520px;padding:24px}
+.up-decision-dialog .up-decision-item{font-size:16px;line-height:1.5;margin:0 0 20px;font-weight:600}
+.up-decision-dialog label{font-size:13px}
+.up-decision-dialog textarea{min-height:100px;max-height:220px}
+.up-dialog .up-dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:12px}
+.up-dialog .up-dialog-actions button{min-height:44px;margin:0;padding:11px 18px}
+.up-dialog .up-request-submit{background:#8a2520;border-color:#8a2520}
+.up-dialog .up-error:empty{display:none}

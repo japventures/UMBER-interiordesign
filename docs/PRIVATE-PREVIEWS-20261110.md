@@ -9,3 +9,5 @@ Validation: 14 service/preview tests and the existing UI regression pass. Tests 
 ## Simple approval states
 
 Selections use yellow Pending, green Approved and red Changes requested, with text labels in EN/ES. Approve submits the existing authenticated design decision directly; Request changes asks only for a note. Saved decisions are loaded through the existing project refresh. Logistics remains separate. Staff see green only after all assigned clients approve; one request for changes makes the summary red, and missing votes stay yellow. No schema or permissions change. These are design selections, not purchase/payment authorizations.
+
+Dialog correction: reset gallery full-screen height and absolute button positioning in portal dialogs. Dedicated header keeps the 44px close button beside the title. Request-changes dialog is capped at 520px with required comment and Cancel/Send changes actions. Approval remains a direct action. Browser visual verification remains pending.
