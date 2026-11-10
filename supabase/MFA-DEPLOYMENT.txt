@@ -1,0 +1,8 @@
+UMBER · MFA y cierre de invitación — preparado 2026-11-10
+Frontend: enrolamiento TOTP, reto de código, puerta AAL2 antes de datos, redirección invite/recovery.
+Servidor: reemplazar código de portal-admin, portal-drive, portal-drive-oauth, portal-drive-check con archivos homónimos .ts. Conservar configuración JWT actual; portal-drive-oauth debe recibir callback sin JWT de Google.
+Después ejecutar require-mfa.sql: siete políticas RESTRICTIVE (AND) exigen aal2 para todas las operaciones autenticadas. No amplían permisos ni cambian membresías. Invalida estados OAuth pendientes previos.
+No está activado en Supabase hasta completar ambos pasos. El frontend por sí solo NO es imposición suficiente.
+Plantillas: Emails → Templates → Invite user: asunto «Tu invitación al portal UMBER» y templates/invite.html. Reset password: asunto «Recupera tu acceso al portal UMBER» y templates/recovery.html. Conservar variable ConfirmationURL.
+Pruebas pendientes en vivo: alta TOTP propia por AP/Melissa/Jorge, nuevo login/OTP, denegación AAL1 directa DB y funciones, invitación nueva contraseña→MFA, recuperación no omite MFA, retiro/restauración de membresía y descarga.
+No modificar dominio, DNS, Wix, compartir Drive ni contraseñas. Nunca compartir QR/secret/OTP.
