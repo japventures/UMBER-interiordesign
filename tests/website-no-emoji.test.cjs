@@ -53,7 +53,7 @@ test('translation keeps required-field markers and plain call-to-action labels',
 test('EN/ES demo sections and screenshot buttons render without emojis', async () => {
   const mount = { innerHTML: '' };
   const handlers = {};
-  let pathname = '';
+  let pathname = '/UMBER-interiordesign/';
   const NativeDate = Date;
   class FixtureDate extends NativeDate {
     constructor(...args) { super(...(args.length ? args : ['2026-11-09T16:00:00Z'])); }
