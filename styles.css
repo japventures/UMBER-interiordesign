@@ -82,3 +82,22 @@ body.editorial{font-weight:300}
 body:not(.umber-portal-page) main :is(h1,h2,h3,h4){color:var(--umber-terracotta)}
 body .editorial-hero :is(h1,h2,h3,h4){color:#fffdf9}
 body .service-banner :is(h1,h2,h3,h4){color:#fffdf9}
+
+/* Shared hierarchy: the same role uses the same family, weight and color. */
+:root{--umber-title-weight:300;--umber-subtitle-weight:400;--umber-strong-weight:600;--umber-card-size:24px;--umber-copy-line:1.75}
+body main :is(h1,h2,h3,h4){font-family:var(--umber-body-font);font-style:normal}
+body main h1{font-weight:var(--umber-title-weight);letter-spacing:-.025em}
+body main :is(h2,h3,h4){font-weight:var(--umber-subtitle-weight)}
+body .work-meta :is(h2,h3){font-family:var(--umber-body-font);font-size:var(--umber-card-size);font-weight:var(--umber-subtitle-weight);line-height:1.25;letter-spacing:-.025em;margin:8px 0;color:var(--umber-terracotta)}
+.work-meta .eyebrow{display:block;color:var(--umber-olive);margin:0}
+.project-card .work-meta{margin-top:20px}
+body .case-top h1{font-weight:var(--umber-title-weight)}
+main strong,main b{font-weight:var(--umber-strong-weight)}
+.architecture-includes{margin-top:24px;padding:22px 24px;background:var(--umber-coconut);border-left:3px solid var(--umber-terracotta)}
+.architecture-includes .architecture-scope-intro{margin:0;font-weight:500;font-size:14px}
+.architecture-includes .architecture-scope{display:block;margin:18px 0 0;padding-left:20px;list-style:disc}
+.architecture-includes .architecture-scope li{display:list-item;border:0;padding:0;margin:0 0 16px}
+.architecture-includes .architecture-scope h3{display:inline;font-size:16px;font-weight:500;line-height:1.5}
+.architecture-includes .architecture-scope p{font-size:14px;line-height:1.65;margin:4px 0 0}
+.architecture-includes .architecture-scope li:last-child{margin-bottom:0}
+@media(max-width:600px){.architecture-includes{padding:18px}.contact .form-grid{grid-template-columns:1fr}.work-meta :is(h2,h3){overflow-wrap:anywhere}}

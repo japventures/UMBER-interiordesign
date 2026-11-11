@@ -96,7 +96,7 @@ test('every static shell names the blog consistently and requests the corrected 
     const blogLinks = [...navigation.matchAll(/<a\b[^>]*href="(?:[^"]*\/)?blog\/?"[^>]*>(.*?)<\/a>/g)];
     assert.ok(blogLinks.length >= 2, file);
     for (const [, label] of blogLinks) assert.equal(label, 'BLOG', file);
-    assert.match(html, /i18n\.js\?v=brand-review-20261111/, file);
+    assert.match(html, /i18n\.js\?v=complete-review-20261111/, file);
   }
 });
 test('both prerendered Blog pages preserve their heading, title, content and post routes', () => {
