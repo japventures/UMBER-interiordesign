@@ -41,3 +41,9 @@ Se ejecuta toda la suite Node más pruebas de paridad ES/EN de las ocho intencio
 - https://github.com/google/fonts/tree/main/ofl/bebasneue
 
 Archivos WOFF2 convertidos sin cambios de diseño a partir de los TTF oficiales; licencias OFL completas junto a los archivos. Las fuentes no dependen de una petición externa a Google Fonts.
+
+## Inspección del sitio publicado
+
+La primera publicación de esta revisión (35cd74a) terminó correctamente. Se verificaron en el navegador la ficha ES de Veneros (ancho 1168), el color efectivo rgb(135,95,69) de su título, Montserrat en texto y Bebas Neue en etiquetas. Estudio contiene los bloques de la referencia y la foto de las fundadoras. Se revisaron Estudio, Inicio, Servicios y Contacto en ventana de 500 px; el menú abrió y navegó. Servicios y Contacto ES/EN no presentan desbordamiento horizontal en las mediciones. El mínimo de esta ventana Chromium es 500 px: no se certifica iPhone a 390 px ni emulación de dispositivo.
+
+Se detectó una regla .editorial que dejaba peso 400 y se corrigió a 300 para cuerpo; los controles conservan pesos legibles. También se amplió el color de títulos públicos para cubrir Alcance y enfoque y otros subtítulos, preservando contraste claro sobre fotos. Estas correcciones se verifican tras la segunda publicación. No se enviaron datos por el formulario.

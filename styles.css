@@ -76,3 +76,9 @@ button,input,select,textarea{font-family:var(--umber-body-font)}
 header nav,.language-switch,footer nav{font-weight:400}
 .eyebrow,.case-narrative dt{font-family:var(--umber-accent-font);font-weight:400;font-size:15px;letter-spacing:.08em}
 .case-narrative>div>p{max-width:65ch;line-height:1.85}
+
+/* Brand Light body weight also overrides the historical .editorial class. */
+body.editorial{font-weight:300}
+body:not(.umber-portal-page) main :is(h1,h2,h3,h4){color:var(--umber-terracotta)}
+body .editorial-hero :is(h1,h2,h3,h4){color:#fffdf9}
+body .service-banner :is(h1,h2,h3,h4){color:#fffdf9}
