@@ -22,3 +22,7 @@ Renders privados, visor PDF/imágenes, aprobaciones con semáforo, funciones de 
 117 pruebas Node y regresión del portal pasan, incluyendo pruebas nuevas ES/EN para tres destacados, título único de Contacto y seis componentes dentro del servicio principal. Los formularios conservan POST fijo, fieldset deshabilitado sin JavaScript y validación. Pendientes: revisión visual tras el despliegue de este commit; iPhone físico/390px, recepción real del formulario, factura real Mercury, recorrido autenticado y enlace oficial de Instagram.
 
 Las indicaciones implementadas no equivalen a aceptación visual total ni cierran las dependencias listadas.
+
+## Inspección publicada
+
+En a9b0688 se verificó en navegador a 500 px: tres tarjetas en inicio y una foto de hero, Contacto con un solo título, seis componentes agrupados dentro de arquitectura interior y ausencia de desbordamiento en las páginas medidas. Se detectaron reglas antiguas más específicas que dejaban títulos de inicio a 22px frente a 24px en portafolio y etiquetas con tamaños distintos. Se corrigió la prioridad de los selectores para compartir título de 24px/400 y etiqueta de 14px/400 entre ambas ubicaciones; se comprueba en la publicación final.
