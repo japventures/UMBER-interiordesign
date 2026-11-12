@@ -11,7 +11,7 @@ Documento recibido: 3 páginas. SHA-256 del adjunto: 131b60a688b35d83557efc8c4a8
 | 2: Contacto duplicado | Se retiró el H2 repetido. Queda un H1 Contacto / Contact en runtime y HTML estático, sin cambiar el envío protegido de Formspree. |
 | 2: ficha y tarjetas con tipografía/color distintos | Tarjetas de portafolio e inicio comparten componentes y reglas de jerarquía; títulos de ficha pertenecen al rol principal. Metadatos sin ubicación duplicada. |
 | 3: sólo aparece un proyecto | Causa real: home() reutilizaba el arreglo de una sola imagen del hero para crear los destacados. Se separaron las listas: hero estático de una foto, tres destacados con enlaces independientes. Se agregaron pruebas del renderizador real, además de los HTML. |
-| 3: invitación a Instagram al pie | Pendiente del @usuario oficial: no aparece en el documento ni en los archivos recuperados. Se solicitó al usuario. No se inventó ni publicó un enlace. |
+| 3: invitación a Instagram al pie | Resuelto el 12 noviembre: Jorge confirmó @umberinteriordesign. Invitación al pie de todas las páginas, localizada ES/EN, con enlace directo al perfil, apertura separada y sin embed ni emojis. |
 
 ## Conservado
 
@@ -26,3 +26,7 @@ Las indicaciones implementadas no equivalen a aceptación visual total ni cierra
 ## Inspección publicada
 
 En a9b0688 se verificó en navegador a 500 px: tres tarjetas en inicio y una foto de hero, Contacto con un solo título, seis componentes agrupados dentro de arquitectura interior y ausencia de desbordamiento en las páginas medidas. Se detectaron reglas antiguas más específicas que dejaban títulos de inicio a 22px frente a 24px en portafolio y etiquetas con tamaños distintos. Se corrigió la prioridad de los selectores para compartir título de 24px/400 y etiqueta de 14px/400 entre ambas ubicaciones; se comprueba en la publicación final.
+
+## Cierre de Instagram — 12 noviembre 2026
+
+El usuario proporcionó @umberinteriordesign. Se añadió el bloque común de invitación al pie, con el enlace https://www.instagram.com/umberinteriordesign/ y traducción que se mantiene al cambiar de idioma. No se inició sesión ni se siguió la cuenta; se publica únicamente el enlace solicitado. Albra y las pruebas autenticadas/de entrega real conservan sus estados pendientes.

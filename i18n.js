@@ -1,5 +1,7 @@
 /* Editorial Spanish draft for review. English remains the source version. */
 const ES={
+'Follow our studio on Instagram':'Sigue al estudio en Instagram',
+'Projects, details and inspiration from UMBER.':'Proyectos, detalles e inspiración de UMBER.',
 'View projects':'Ver proyectos','STUDIO ADMIN':'ADMINISTRACIÓN DEL ESTUDIO','2 min read':'2 min de lectura',
 'CLIENT PORTAL':'PORTAL DE CLIENTES','CLIENT ACCESS':'ACCESO CLIENTES','PROJECTS':'PROYECTOS','SERVICES':'SERVICIOS','ABOUT US':'ESTUDIO','CONTACT':'CONTACTO','BLOG':'BLOG','FAQ':'PREGUNTAS FRECUENTES','START A PROJECT':'INICIAR UN PROYECTO','Menu':'Menú','Skip to content':'Ir al contenido','Main navigation':'Navegación principal','Footer navigation':'Navegación del pie de página','UMBER home':'Inicio UMBER','PUBLIC DESIGN REVIEW':'REVISIÓN PÚBLICA · EN DESARROLLO',
 'HOUSTON · MEXICO':'HOUSTON · MÉXICO','Spaces that feel':'Espacios que se sienten','like you.':'como tú.','Thoughtful interiors. Natural warmth.':'Diseño con intención. Calidez natural.','A personal sense of belonging.':'Una forma personal de habitar.','Explore our projects':'Explora nuestros proyectos','Start a project':'Inicia un proyecto','FEATURED RESIDENCE':'RESIDENCIA DESTACADA','San Francisco Ranch · Tapalpa':'San Francisco Ranch · Tapalpa',

@@ -103,3 +103,11 @@ main strong,main b{font-weight:var(--umber-strong-weight)}
 @media(max-width:600px){.architecture-includes{padding:18px}.contact .form-grid{grid-template-columns:1fr}.work-meta :is(h2,h3){overflow-wrap:anywhere}}
 
 body .selected-work .work-meta .eyebrow,body .project-card .work-meta .eyebrow{font-family:var(--umber-accent-font);font-size:14px;font-weight:400;line-height:1.4;letter-spacing:.08em;color:var(--umber-olive)}
+
+/* Shared Instagram invitation; no embed, tracking script or decorative emoji. */
+footer{flex-wrap:wrap}
+.instagram-follow{flex:0 0 100%;display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--umber-burlap);margin-top:28px;padding-top:28px;min-width:0}
+.instagram-follow h2{font-family:var(--umber-body-font);font-size:20px;font-weight:400;letter-spacing:-.025em;color:var(--umber-terracotta);margin:0 0 8px}
+.instagram-follow p{font-size:13px;line-height:1.6;margin:0;color:var(--umber-olive)}
+.instagram-follow>a{display:inline-flex;align-items:center;min-height:44px;overflow-wrap:anywhere;font-size:14px}
+@media(max-width:600px){.instagram-follow{flex-direction:column;align-items:flex-start;gap:12px}.instagram-follow>a{max-width:100%}}
