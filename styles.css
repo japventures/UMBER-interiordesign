@@ -152,3 +152,7 @@ body .service-offerings .service-grid h3{color:var(--umber-terracotta);font-size
 @media(prefers-reduced-motion:reduce){.instagram-photo-grid img{transition:none}}
 
 body .service-offerings .service-grid h4{color:var(--umber-terracotta)}
+
+/* Keep home hero text legible above the global brand heading color. */
+body:not(.umber-portal-page) main .editorial-hero .hero-copy h1{color:#fffdf9;text-shadow:0 2px 18px rgba(0,0,0,.3)}
+.editorial-hero .hero-shade{background:linear-gradient(90deg,rgba(18,20,15,.68),rgba(18,20,15,.25)),linear-gradient(0deg,rgba(18,20,15,.45),transparent 80%)}
