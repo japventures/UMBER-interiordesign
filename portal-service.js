@@ -36,6 +36,7 @@ window.UMBERPortalService=(()=>{
  async function reset(email,redirectTo){return unwrap(await (await client()).auth.resetPasswordForEmail(email,{redirectTo}));}
  async function password(password){return unwrap(await (await client()).auth.updateUser({password}));}
  async function saveProject(row){return unwrap(await (await client()).from('portal_projects').insert(row).select().single());}
+ async function uploadEntry(entryId,file){const c=await client(),form=new FormData();form.set('action','upload');form.set('entry_id',entryId);form.set('file',file);const result=await c.functions.invoke('portal-drive',{body:form});if(result.error){if(result.error.context?.status===400)throw Error('UPLOAD_NOT_INSTALLED');throw result.error;}return result.data;}
  async function saveEntry(row){const c=await client();return unwrap(await (row.id?c.from('portal_entries').update(row).eq('id',row.id):c.from('portal_entries').insert(row)).select().single());}
  async function comment(row){return unwrap(await (await client()).from('portal_comments').insert(row).select().single());}
  async function decide(row){return unwrap(await (await client()).from('portal_decisions').upsert(row,{onConflict:'entry_id,user_id'}).select().single());}
@@ -46,7 +47,7 @@ window.UMBERPortalService=(()=>{
   return data;
  }
  async function admin(body){return unwrap(await (await client()).functions.invoke('portal-admin',{body}));}
- return {scopeProjectData,configured,client,live,projects,projectData,signIn,signOut,passwordFlow,clearPasswordFlow,mfaStatus,mfaEnroll,mfaVerify,reset,password,saveProject,saveEntry,comment,decide,downloadEntry,admin,safeUrl,driveUrl,fileUrl};
+ return {guidedUploadEnabled:()=>window.UMBER_PORTAL_CONFIG?.guidedUploadEnabled===true,scopeProjectData,configured,client,live,projects,projectData,signIn,signOut,passwordFlow,clearPasswordFlow,mfaStatus,mfaEnroll,mfaVerify,reset,password,saveProject,saveEntry,uploadEntry,comment,decide,downloadEntry,admin,safeUrl,driveUrl,fileUrl};
 })();
 
 

@@ -139,3 +139,5 @@ dialog.up-dialog{height:auto;min-height:0;box-sizing:border-box;margin:auto;max-
 .up-cost-unknown{color:#8a641e}
 
 .up-works-table th[scope=row] strong,.up-works-table small,.up-purchase-table small{display:block;margin-top:5px}
+
+.up-flow-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.up-flow-grid h2{font-size:24px}.up-flow-slots{list-style:none;padding:0;margin:0}.up-flow-slots>li{padding:18px 0;border-top:1px solid #d8cdc3;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}.up-flow-slots small{display:block;margin-top:5px}.up-flow-file{width:100%;padding:12px;background:#f8f6f1}.up-flow-file .up-card-actions{margin-top:10px}@media(max-width:900px){.up-flow-grid{grid-template-columns:1fr}}

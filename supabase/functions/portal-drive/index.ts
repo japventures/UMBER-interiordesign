@@ -75,6 +75,23 @@ async function within(id,folder,meta){
  throw Error('FILE_NOT_AVAILABLE');
 }
 const safeName=value=>String(value||'UMBER-file').replace(/[\u0000-\u001f\u007f/\\]/g,'_').slice(0,180);
+function uploadMime(bytes){
+ const starts=(...v)=>v.every((x,i)=>bytes[i]===x);
+ if(starts(0x25,0x50,0x44,0x46,0x2d))return 'application/pdf';
+ if(starts(0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a))return 'image/png';
+ if(starts(0xff,0xd8,0xff))return 'image/jpeg';
+ if(starts(0x52,0x49,0x46,0x46)&&new TextDecoder().decode(bytes.slice(8,12))==='WEBP')return 'image/webp';
+ if(starts(0x67,0x6c,0x54,0x46))return 'model/gltf-binary';
+ if(starts(0x50,0x4b,0x03,0x04))return 'application/zip';
+ return null;
+}
+async function uploadBody(req){
+ const limit=25*1024*1024+65536,reader=req.body?.getReader();if(!reader)throw Error('INVALID_UPLOAD');let size=0;const parts=[];
+ try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>limit){await reader.cancel();throw Error('UPLOAD_TOO_LARGE');}parts.push(value);}}finally{reader.releaseLock();}
+ const bytes=new Uint8Array(size);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.length;}
+ const form=await new Response(bytes,{headers:{'Content-Type':req.headers.get('content-type')||''}}).formData();
+ return {action:form.get('action'),entry_id:form.get('entry_id'),file:form.get('file')};
+}
 function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access,fetchImpl=fetch}){
  const {oauthConfig,open,hash,TEAM_EMAILS}=security;
  const {ROOT,SHARED_DRIVE,QA_PROJECT,OTHER_PROJECT,QA_USER,FIXTURES,QA_TEXT,driveId,uuid,canRead,folderMatches,within,safeName}=access;
@@ -93,8 +110,10 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
    if(!verifiedMfa(bearer,user))return reply(403,{error:'MFA_REQUIRED'});
    const staffResult=await admin.from('portal_staff').select('user_id').eq('user_id',user.id).maybeSingle();if(staffResult.error)throw Error('SERVER_ERROR');
    const staff=!!staffResult.data&&TEAM_EMAILS.includes(user.email);
-   const body=await jsonBody(req);
-   if(!['picker','verify_root','create_qa','download'].includes(body.action))return reply(400,{error:'Acción no válida'});
+   const multipart=(req.headers.get('content-type')||'').startsWith('multipart/form-data;');
+   if(multipart&&!staff)return reply(403,{error:'Acceso del equipo UMBER requerido'});
+   const body=multipart?await uploadBody(req):await jsonBody(req);
+   if(!['picker','verify_root','create_qa','download','upload'].includes(body.action))return reply(400,{error:'Acción no válida'});
    if(body.action!=='download'&&!staff)return reply(403,{error:'Acceso del equipo UMBER requerido'});
    let connection,google;
    async function googleClient(){
@@ -119,6 +138,36 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
     if(!response.ok)throw Error('FILE_NOT_AVAILABLE');return response.json();
    }
    async function root(){const m=await meta(ROOT);if(m.mimeType!=='application/vnd.google-apps.folder'||m.trashed||m.driveId!==SHARED_DRIVE)throw Error('ROOT_REQUIRED');return m;}
+   if(body.action==='upload'){
+    if(!multipart||!uuid(body.entry_id)||!(body.file instanceof File)||!body.file.size||body.file.size>MAX)return reply(400,{error:'Archivo no válido; límite 25 MB'});
+    const result=await admin.from('portal_entries').select('id,project_id,visibility,data,updated_at').eq('id',body.entry_id).maybeSingle();
+    if(result.error)throw Error('SERVER_ERROR');const entry=result.data;
+    if(!entry)return reply(404,{error:'Entregable no disponible'});
+    // Replacing an already published file requires a separate draft/version.
+    if(entry.visibility!=='team')return reply(409,{error:'Carga el archivo en un borrador o crea una nueva versión'});
+    const bytes=new Uint8Array(await body.file.arrayBuffer()),mime=uploadMime(bytes);if(!mime)return reply(415,{error:'Usa PDF, PNG, JPG, WebP, GLB o ZIP'});
+    await root();
+    let binding=await admin.from('portal_drive_folders').select('folder_id').eq('project_id',entry.project_id).maybeSingle();if(binding.error)throw Error('SERVER_ERROR');
+    if(!binding.data){
+     const created=await drive('/drive/v3/files?supportsAllDrives=true&fields=id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Proyecto '+entry.project_id,mimeType:'application/vnd.google-apps.folder',parents:[ROOT],appProperties:{umber_project:entry.project_id}})});
+     if(!created.ok)throw Error('SERVER_ERROR');const folder=await created.json();
+     if(!folderMatches(await meta(folder.id),folder.id,ROOT))throw Error('FILE_NOT_AVAILABLE');
+     const saved=await admin.from('portal_drive_folders').insert({project_id:entry.project_id,folder_id:folder.id});
+     // A concurrent request may already have bound the project. Never replace it.
+     binding=await admin.from('portal_drive_folders').select('folder_id').eq('project_id',entry.project_id).maybeSingle();
+     if(binding.error||!binding.data)throw Error('SERVER_ERROR');
+    }
+    const folderId=binding.data.folder_id;if(!folderMatches(await meta(folderId),folderId,ROOT))throw Error('FILE_NOT_AVAILABLE');
+    const filename=safeName(body.file.name),boundary='umber_'+crypto.randomUUID(),metadata={name:filename,mimeType:mime,parents:[folderId],appProperties:{umber_entry:entry.id}};
+    const payload=new Blob(['--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(metadata)+'\r\n--'+boundary+'\r\nContent-Type: '+mime+'\r\n\r\n',bytes,'\r\n--'+boundary+'--\r\n']);
+    const uploaded=await drive('/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body:payload});if(!uploaded.ok)throw Error('SERVER_ERROR');const file=await uploaded.json();
+    await within(file.id,folderId,meta);
+    const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
+    let update=admin.from('portal_entries').update({data:{...entry.data,drive_file_id:file.id,file_name:filename,file_mime:mime,file_size:bytes.length,sha256:digest}}).eq('id',entry.id).eq('project_id',entry.project_id).eq('visibility','team');
+    if(entry.updated_at)update=update.eq('updated_at',entry.updated_at);
+    const saved=await update.select('id').maybeSingle();if(saved.error)throw Error('SERVER_ERROR');if(!saved.data)return reply(409,{error:'El entregable cambió durante la carga. Actualiza antes de intentar otra vez.'});
+    return reply(200,{ok:true,entry_id:entry.id,file_name:filename});
+   }
    if(body.action==='picker'){
     const config=oauthConfig(env('GOOGLE_DRIVE_OAUTH_CLIENT'));
     const key=String(env('GOOGLE_PICKER_BROWSER_KEY')||'').trim();if(!/^[A-Za-z0-9_-]{20,200}$/.test(key))return reply(503,{error:'Falta la clave de Google Picker'});
@@ -194,6 +243,8 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
    let size=0;const stream=response.body?.pipeThrough(new TransformStream({transform(chunk,c){size+=chunk.byteLength;if(size>MAX)throw Error('FILE_TOO_LARGE');c.enqueue(chunk);}}));
    return new Response(stream,{status:200,headers:{...headers,'Content-Type':'application/octet-stream','Content-Disposition':"attachment; filename*=UTF-8''"+encodeURIComponent(safeName(file.name)+(native?'.pdf':''))}});
   }catch(error){
+   if(error?.message==='UPLOAD_TOO_LARGE')return reply(413,{error:'El archivo supera 25 MB'});
+   if(error?.message==='INVALID_UPLOAD')return reply(400,{error:'Carga no válida'});
    if(['FILE_NOT_AVAILABLE','ROOT_REQUIRED'].includes(error?.message))return reply(404,{error:'Archivo o carpeta no disponible para esta conexión'});
    if(error?.message==='NOT_CONNECTED')return reply(409,{error:'Vuelve a conectar Google Drive desde la cuenta del estudio'});
    return reply(503,{error:'No se pudo completar la operación privada de Drive. Revisa la instalación.'});
