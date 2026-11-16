@@ -8,6 +8,7 @@ test('purchases: per-unit discount, tax and shipping calculate without adding co
 test('confirmed amounts override calculations and incomplete extras do not become zero',()=>{
  assert.equal(p.purchaseAmounts({unit_price:100,quantity:2,discount_amount:0,tax_amount:0,delivery_amount:0,subtotal_amount:175}).total,175);
  assert.equal(p.purchaseAmounts({unit_price:100,quantity:2,discount_amount:0,tax_amount:null,delivery_amount:10}).total,null);
+ assert.equal(p.purchaseAmounts({unit_price:100,quantity:2,tax_amount:0,delivery_amount:0}).total,null);
  assert.equal(p.purchaseAmounts({amount:180,unit_price:100,quantity:2}).total,180);
  assert.equal(p.purchaseAmounts({unit_price:100,quantity:2,discount_amount:101,tax_amount:0,delivery_amount:0}).subtotal,null);
  assert.equal(p.purchaseAmounts({unit_price:0.1,quantity:3,discount_amount:0,tax_amount:0,delivery_amount:0}).total,0.3);

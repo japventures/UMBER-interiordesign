@@ -137,3 +137,5 @@ dialog.up-dialog{height:auto;min-height:0;box-sizing:border-box;margin:auto;max-
 .up-cost-over{color:#a32f2f}
 .up-cost-under,.up-cost-equal{color:#3f633a}
 .up-cost-unknown{color:#8a641e}
+
+.up-works-table th[scope=row] strong,.up-works-table small,.up-purchase-table small{display:block;margin-top:5px}
