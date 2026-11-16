@@ -14,3 +14,5 @@ test('stage preparation resumes after partial failure without duplicating succes
  await vm.runInContext('prepareFlow()',ctx);assert.equal(state.entries.length,8);await vm.runInContext('prepareFlow()',ctx);assert.equal(state.entries.length,8);
  assert.ok(state.entries.every(e=>e.project_id==='project-a'&&e.visibility==='client'));
 });
+
+test('a complete new workflow does not double-count retained legacy stages',()=>{const old={id:'old',kind:'stage',position:1,data:{}},rows=[old,...Array.from(flow,(phase,i)=>({id:phase.key,position:(i+1)*100,data:{workflow_phase:phase.key}}))];const result=c.window.UMBERPortal.orderedStages(rows);assert.equal(result.length,8);assert.equal(rows.length,9);assert.ok(!result.includes(old));assert.equal(result[0].id,'quote');});
