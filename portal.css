@@ -83,7 +83,7 @@
 .up-selection-table th[scope=row] p{text-transform:none;letter-spacing:normal;font-weight:400;font-size:.9rem}
 
 /* Portal dialogs must not inherit the public gallery's full-screen layout. */
-dialog.up-dialog{height:auto;min-height:0;box-sizing:border-box;margin:auto;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
+dialog.up-dialog{height:fit-content;min-height:0;box-sizing:border-box;margin:auto;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
 .up-dialog button{position:static;z-index:auto;font:400 14px/1.4 var(--umber-body-font)}
 .up-dialog .up-dialog-header{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:start;gap:16px;margin-bottom:20px}
 .up-dialog .up-dialog-header h2{margin:8px 0 0;overflow-wrap:anywhere}
