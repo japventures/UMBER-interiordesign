@@ -156,3 +156,26 @@ body .service-offerings .service-grid h4{color:var(--umber-terracotta)}
 /* Keep home hero text legible above the global brand heading color. */
 body:not(.umber-portal-page) main .editorial-hero .hero-copy h1{color:#fffdf9;text-shadow:0 2px 18px rgba(0,0,0,.3)}
 .editorial-hero .hero-shade{background:linear-gradient(90deg,rgba(18,20,15,.68),rgba(18,20,15,.25)),linear-gradient(0deg,rgba(18,20,15,.45),transparent 80%)}
+
+/* Review 4: readable labels, lighter services, compact social link. */
+:root{--umber-accent-font:var(--umber-body-font)}
+body .eyebrow{font-family:var(--umber-body-font);font-weight:500;letter-spacing:.1em;line-height:1.5}
+body{font-weight:400}
+.service-intro-copy{max-width:720px;font-size:17px;line-height:1.8;margin:24px 0 0}
+.services-intro{margin-bottom:44px}
+.service-offerings .service-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.service-offerings .service-grid article{background:rgba(248,246,241,.24);color:#fffdf9;border:1px solid rgba(255,253,249,.3);padding:28px;backdrop-filter:blur(8px)}
+body:not(.umber-portal-page) main .service-offerings .service-grid h2{position:static;display:block;font-size:23px;font-weight:500;line-height:1.35;letter-spacing:-.02em;margin:0 0 20px;text-align:left;color:#fffdf9}
+.service-offerings .service-number{font-family:var(--umber-body-font);font-weight:400;color:#fffdf9}
+.service-offerings>img{filter:brightness(.28)}
+.process-section .page-heading{margin-bottom:36px}
+.process-section .page-heading h2{margin-bottom:16px}
+.process-section .page-heading>p{max-width:720px}
+.process-section .service-number{font-family:var(--umber-body-font);font-size:24px;font-weight:500}
+.process-section .process p{font-size:15px;line-height:1.8}
+.instagram-follow{display:flex;justify-content:space-between;align-items:center;max-width:760px;padding:20px 0;gap:20px}
+.instagram-follow h2{font-size:16px;font-weight:500;margin:0}
+.instagram-follow p{display:none}
+.instagram-follow>a{font-size:14px}
+@media(max-width:850px){.service-offerings .service-grid{grid-template-columns:1fr}.service-offerings .service-grid article{padding:24px}}
+@media(max-width:600px){.instagram-follow{align-items:flex-start;flex-direction:column;gap:4px}}

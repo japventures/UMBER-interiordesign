@@ -22,7 +22,10 @@ async function submit(type,values){const form={dataset:{upForm:type},values,clos
  context.window.UMBER_PORTAL_CONFIG={enabled:false};
  path='/UMBER-interiordesign/es/portal/';await P.mount('/portal');assert.ok(html().includes('ACCESO AÚN NO HABILITADO'));assert.ok(!html().includes('name="password"'),'No credential collection before configuration');
  path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMOSTRACIÓN'));assert.ok(html().includes('PENDIENTES POR REVISAR'));assert.ok(html().includes('Diseño conceptual'));assert.ok(html().includes('The Woodlands'));assert.ok(!html().includes('Presupuesto interno de ejemplo'));
- for(const tab of ['stages','calendar','documents','design','selections','invoices','updates','messages']){await click('[data-up-tab]',{upTab:tab});assert.ok(html().includes('data-up-tab="'+tab+'" aria-current="page"'),tab+' renders');assert.ok(!/undefined|NaN/.test(html()),tab+' has valid output');}
+ for(const tab of ['stages','calendar','documents','design','selections','invoices','updates','messages']){await click('[data-up-tab]',{upTab:tab});assert.ok(html().includes('data-up-tab="'+(tab==='design'?'documents':tab)+'" aria-current="page"'),tab+' renders');assert.ok(!/undefined|NaN/.test(html()),tab+' has valid output');}
+ await click('[data-up-tab]',{upTab:'stages'});assert.ok(html().includes('up-stage-roadmap'));assert.ok(html().includes('<progress'));assert.ok(html().includes('etapas completadas'));assert.ok(html().includes('no representa porcentaje físico'));
+ await click('[data-up-tab]',{upTab:'documents'});assert.ok(html().includes('Todo el diseño, en un solo lugar'));assert.ok(!html().includes('data-up-tab="design"'));assert.ok(html().includes('Render'));
+ await click('[data-up-tab]',{upTab:'updates'});assert.ok(html().includes('reportes de gastos por periodo'));
  await click('[data-up-tab]',{upTab:'documents'});await change('up-doc-filter','contract');assert.ok(html().includes('Contrato de servicios'));assert.ok(!html().includes('Distribución general'));
  await click('[data-up-tab]',{upTab:'calendar'});await click('[data-up-month]',{upMonth:'1'});await click('[data-up-month]',{upMonth:'1'});assert.ok(html().includes('enero de 2027'));
  await click('[data-up-calendar-view]',{upCalendarView:'gantt'});assert.ok(html().includes('Cronograma del proyecto'));assert.ok(html().includes('data-up-calendar-view="gantt" aria-pressed="true"'));assert.ok(html().includes('Por programar'));assert.ok(html().includes('data-up-gantt-entry='));assert.ok(!html().includes('Presupuesto interno de ejemplo'));
@@ -46,9 +49,9 @@ async function submit(type,values){const form={dataset:{upForm:type},values,clos
  // Workflow references use fictional data and must not expose team-only records.
  path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');
  await click('[data-up-tab]',{upTab:'stages'});
- assert.equal((html().match(/class="up-stage"/g)||[]).length,5,'Five reference service stages');
+ assert.equal((html().match(/class="up-stage-step up-stage-/g)||[]).length,5,'Five reference service stages');
  for(const title of ['Visita a sitio y arranque','Look and feel y distribución','Diseño conceptual','Presupuesto y compras','Supervisión y styling'])assert.ok(html().includes(title));
- assert.ok(html().includes('Entregables y seguimiento'));assert.ok(html().includes('Revisión 1 / 2'));
+ assert.ok(html().includes('Ver entregables y seguimiento'));assert.ok(html().includes('Revisión 1 / 2'));
  assert.ok(html().includes('Por programar'));assert.ok(html().includes('confirmar aprobación del diseño'));
  assert.ok(!html().includes('Presupuesto interno de ejemplo'),'Linked internal draft remains hidden');
  await click('[data-up-tab]',{upTab:'selections'});

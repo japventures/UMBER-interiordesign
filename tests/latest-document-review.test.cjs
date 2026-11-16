@@ -19,10 +19,11 @@ for(const es of [false,true]){
   assert.ok(c.result.includes('data-contact method="post"'));assert.ok(c.result.includes('fieldset class="contact-fields" disabled'));
   const html=read((es?'es/':'')+'contact/index.html');assert.equal((html.match(new RegExp('<h[1-6]>'+label+'</h[1-6]>','g'))||[]).length,1);
  });
- test(`${es?'ES':'EN'}: architecture components are nested within the primary service`,()=>{
+ test(`${es?'ES':'EN'}: services merge design and remodeling without a fixed deliverable list`,()=>{
   const c=vm.createContext({D:{serviceImage:'x'},ui:(a,b)=>es?b:a,image:()=>'',contactCta:()=>''});
   vm.runInContext(source.slice(source.indexOf('const services='),source.indexOf('function contactCta()'))+';result=servicePage()',c);
-  const primary=c.result.match(/<article class="service-primary">([\s\S]*?)<\/article>/)[1];assert.ok(primary.includes('class="architecture-includes"'));assert.equal((primary.match(/<li>/g)||[]).length,6);
-  assert.equal((c.result.match(/class="architecture-includes"/g)||[]).length,1);
+  assert.ok(c.result.includes(es?'Diseño interior y remodelación':'Interior design and remodeling'));
+  assert.equal((c.result.match(/class="architecture-includes"/g)||[]).length,0);
+  assert.equal((c.result.match(/class="service-number"/g)||[]).length,7);
  });
 }

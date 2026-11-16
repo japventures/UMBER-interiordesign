@@ -102,3 +102,24 @@ dialog.up-dialog{height:auto;min-height:0;box-sizing:border-box;margin:auto;max-
 .up-sidebar .eyebrow,.up-card .eyebrow{font-family:var(--umber-accent-font);font-size:14px;letter-spacing:.06em}
 
 .up-note-label{display:block;font-size:11px;color:var(--umber-olive);margin-bottom:4px}
+
+/* Review 4: clearer dashboard labels and an explicit stage journey. */
+.up-project-start .eyebrow,.up-summary-label{font-family:var(--umber-body-font);font-size:16px!important;font-weight:600!important;letter-spacing:.04em!important;line-height:1.5;color:var(--umber-slate)}
+.up-stage-summary{display:grid;gap:18px;margin-bottom:28px}
+.up-stage-summary h2{font-size:28px;margin:8px 0}
+.up-stage-summary progress{display:block;width:100%;height:14px;accent-color:#50614b;border:0;border-radius:8px;overflow:hidden}
+.up-stage-summary progress::-webkit-progress-bar{background:#e3dfd3}
+.up-stage-summary progress::-webkit-progress-value{background:#50614b}
+.up-stage-roadmap{list-style:none;padding:0;margin:0;display:grid;gap:0}
+.up-stage-step{display:grid;grid-template-columns:44px minmax(0,1fr);gap:20px;position:relative;padding-bottom:24px}
+.up-stage-step:not(:last-child):before{content:'';position:absolute;left:21px;top:44px;bottom:0;width:2px;background:#cabdab}
+.up-stage-marker{display:grid;place-items:center;width:44px;height:44px;border:1px solid #cabdab;border-radius:50%;font-size:16px;background:#f8f6f1;color:#605e4d}
+.up-stage-completed .up-stage-marker{background:#50614b;color:white;border-color:#50614b}
+.up-stage-in_progress .up-stage-marker{background:#f4e7cd;border-color:#a17833;color:#705024}
+.up-stage-step>.up-card{margin:0;min-width:0}
+.up-stage-step .up-stage-title h2{font-size:22px}
+.up-stage-step details{border-top:1px solid #d8cdc3;padding-top:16px;margin-top:20px}
+.up-stage-step summary{font-family:var(--umber-body-font);font-size:15px;font-weight:500;cursor:pointer;min-height:40px}
+.up-timeline .up-private-image{max-width:800px;margin:20px 0}
+.up-deliverable-grid{align-items:start}
+@media(max-width:600px){.up-stage-step{grid-template-columns:34px minmax(0,1fr);gap:10px}.up-stage-marker{width:34px;height:34px;font-size:14px}.up-stage-step:not(:last-child):before{left:16px;top:34px}.up-stage-step .up-card{padding:18px}.up-stage-summary h2{font-size:24px}}
