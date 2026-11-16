@@ -42,5 +42,11 @@ window.UMBER_PORTAL_SAMPLE=()=>{
  for(const p of projects)p.name=translations[p.name]||p.name;
  for(const e of entries){e.title=translations[e.title]||e.title;e.description=translations[e.description]||e.description;for(const k of ['owner','location','room','vendor','area'])if(e.data[k])e.data[k]=translations[e.data[k]]||e.data[k];}
  }
+ // Independent fictional construction rows; never copy a client's financial data here.
+ Object.assign(sofa.data,{purchase_group:'proposed',discount_amount:0,tax_amount:0,delivery_amount:0,commission_amount:null,estimated_delivery:tr('Por confirmar','To confirm')});
+ Object.assign(lamp.data,{purchase_group:'orders',discount_amount:0,tax_amount:0,delivery_amount:0,order_number:'DEMO-ORDER-02',procurement_status:'ordered',estimated_delivery:'2027-01-15'});
+ entries.push(entry('update',tr('Pintura · ejemplo','Painting · example'),tr('Partida ficticia en ejecución.','Fictional work in progress.'),'in_progress',{category:'work_budget',room:tr('Sala','Living room'),owner:tr('Contratista de ejemplo','Example contractor'),budget_amount:5000,actual_amount:4200,currency:'USD'},{starts_at:'2026-11-01T15:00:00Z',ends_at:'2026-11-16T18:00:00Z'}));
+ entries.push(entry('update',tr('Instalación · ejemplo','Installation · example'),tr('Partida ficticia con sobrecosto para mostrar la diferencia.','Fictional over-budget item demonstrating the variance.'),'completed',{category:'work_budget',room:tr('Comedor','Dining room'),owner:tr('Contratista de ejemplo','Example contractor'),budget_amount:1800,actual_amount:1950,currency:'USD'},{starts_at:'2026-11-01T15:00:00Z',ends_at:'2026-11-16T18:00:00Z'}));
+ entries.push(entry('update',tr('Carpintería · por cotizar','Joinery · awaiting quote'),tr('Ejemplo sin gasto registrado; no se trata como cero.','Example with no recorded cost; not treated as zero.'),'pending',{category:'work_budget',budget_amount:3000,actual_amount:null,currency:'MXN'}));
  return {projects,entries,comments:[{id:'demo-comment',project_id:projects[0].id,entry_id:null,author_id:'demo-team',body:/^\/es(?:\/|$)/.test(umberRoutePath(location.pathname))?'La próxima revisión reunirá materiales, iluminación y mobiliario. Mensaje ficticio.':'The next review will bring together materials, lighting and furniture. Fictional message.',created_at:'2026-11-08T16:00:00Z'}],decisions:[]};
 };
