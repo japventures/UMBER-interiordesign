@@ -45,8 +45,8 @@ for (const [origin, prefix] of mounts) {
     assert.equal(context.umberRoutePath(prefix+'/'), '/');
   });
 }
-test('Custom-domain readiness does not activate DNS, Pages or hosted Auth settings', () => {
-  assert.equal(fs.existsSync(path.join(root, 'CNAME')), false);
+test('Approved custom domain is preserved without rewriting hosted Auth settings', () => {
+  assert.equal(read('CNAME').trim(), 'umberinteriordesign.com');
   assert.match(read('supabase/config.toml'), /site_url = "https:\/\/japventures.github.io\/UMBER-interiordesign\/es\/portal\/"/);
   assert.ok(pages.length >= 45);
 });

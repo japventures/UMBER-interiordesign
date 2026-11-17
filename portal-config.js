@@ -5,5 +5,7 @@ window.UMBER_PORTAL_CONFIG = Object.freeze({
   supabaseUrl: 'https://nsugfmibvlrifcrvmsex.supabase.co',
   publishableKey: 'sb_publishable_ejx9vu4ODzPX6vLlCX4_xQ_DdUaegXR',
   sdkUrl: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.102.1/+esm',
+  guidedUploadEnabled: false,
+  guidedUploadProjectIds: ['e2e00000-0000-4000-8000-000000000001'],
   enabled: true
 });
