@@ -53,3 +53,5 @@ tests/update-draft.test.cjs
 tests/unknown-currency.test.cjs
 tests/safe-release.test.cjs
 safe-release-files.txt
+tests/project-private-default.test.cjs
+tests/guided-workflow.test.cjs
