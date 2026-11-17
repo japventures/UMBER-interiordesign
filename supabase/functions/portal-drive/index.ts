@@ -58,6 +58,9 @@ async function jsonBody(req){
 const ROOT='1aXqlTUWrToTIT610lG1G-zrh-2WRMj23';
 const SHARED_DRIVE='0AIUOZKId18GEUk9PVA';
 const QA_PROJECT='e2e00000-0000-4000-8000-000000000001';
+// QA operator is separate from the corporate Google OAuth owner allowlist.
+const QA_OPERATOR_ID='d2503a8a-c026-4e7a-8032-66f33084e9d2';
+const QA_OPERATOR_EMAIL='jorge@jorgearteaga.com';
 const OTHER_PROJECT='e2e00000-0000-4000-8000-000000000002';
 const QA_USER='fabd96bc-80fd-439d-a68e-31725555fd32';
 const FIXTURES=[
@@ -119,11 +122,18 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
    if(!verifiedMfa(bearer,user))return reply(403,{error:'MFA_REQUIRED'});
    const staffResult=await admin.from('portal_staff').select('user_id').eq('user_id',user.id).maybeSingle();if(staffResult.error)throw Error('SERVER_ERROR');
    const staff=!!staffResult.data&&TEAM_EMAILS.includes(user.email);
+   const qaEnabled=env('PORTAL_QA_UPLOAD_ENABLED')==='true';
+   const qaOperator=qaEnabled&&!!staffResult.data&&user.id===QA_OPERATOR_ID&&user.email===QA_OPERATOR_EMAIL;
+   async function qaOwnEntry(entry){
+    if(!qaOperator||entry.project_id!==QA_PROJECT)return false;
+    const audit=await admin.from('portal_audit').select('id').eq('table_name','portal_entries').eq('record_id',entry.id).eq('project_id',QA_PROJECT).eq('action','INSERT').eq('actor_id',user.id).limit(1).maybeSingle();
+    return !audit.error&&!!audit.data;
+   }
    const multipart=(req.headers.get('content-type')||'').startsWith('multipart/form-data;');
-   if(multipart&&!staff)return reply(403,{error:'Acceso del equipo UMBER requerido'});
+   if(multipart&&!staff&&!qaOperator)return reply(403,{error:'Acceso del equipo UMBER requerido'});
    const body=multipart?await uploadBody(req):await jsonBody(req);
    if(!['picker','verify_root','create_qa','download','upload'].includes(body.action))return reply(400,{error:'Acción no válida'});
-   if(body.action!=='download'&&!staff)return reply(403,{error:'Acceso del equipo UMBER requerido'});
+   if(body.action!=='download'&&!staff&&!(body.action==='upload'&&qaOperator))return reply(403,{error:'Acceso del equipo UMBER requerido'});
    let connection,google;
    async function googleClient(){
     if(google)return google;
@@ -148,10 +158,12 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
    }
    async function root(){const m=await meta(ROOT);if(m.mimeType!=='application/vnd.google-apps.folder'||m.trashed||m.driveId!==SHARED_DRIVE)throw Error('ROOT_REQUIRED');return m;}
    if(body.action==='upload'){
+    if(!qaEnabled)return reply(503,{error:'Carga QA no habilitada'});
     if(!multipart||!uuid(body.entry_id)||!(body.file instanceof File)||!body.file.size||body.file.size>MAX)return reply(400,{error:'Archivo no válido; límite 25 MB'});
     const result=await admin.from('portal_entries').select('id,project_id,visibility,data,updated_at').eq('id',body.entry_id).maybeSingle();
     if(result.error)throw Error('SERVER_ERROR');const entry=result.data;
-    if(!entry)return reply(404,{error:'Entregable no disponible'});
+    if(!entry||entry.project_id!==QA_PROJECT)return reply(404,{error:'Entregable QA no disponible'});
+    if(!staff&&(!await qaOwnEntry(entry)||entry.data?.drive_file_id||entry.data?.drive_url||entry.data?.external_url))return reply(403,{error:'Crea un borrador QA nuevo con tu propia cuenta'});
     // Replacing an already published file requires a separate draft/version.
     if(entry.visibility!=='team')return reply(409,{error:'Carga el archivo en un borrador o crea una nueva versión'});
     const bytes=new Uint8Array(await body.file.arrayBuffer()),mime=uploadMime(bytes);if(!mime)return reply(415,{error:'Usa PDF, PNG, JPG, WebP, GLB o ZIP'});
@@ -172,7 +184,7 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
     const uploaded=await drive('/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body:payload});if(!uploaded.ok)throw Error('SERVER_ERROR');const file=await uploaded.json();
     await within(file.id,folderId,meta);
     const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
-    let update=admin.from('portal_entries').update({data:{...entry.data,drive_file_id:file.id,file_name:filename,file_mime:mime,file_size:bytes.length,sha256:digest}}).eq('id',entry.id).eq('project_id',entry.project_id).eq('visibility','team');
+    let update=admin.from('portal_entries').update({data:{...entry.data,qa_uploaded_by:user.id,qa_upload:true,drive_file_id:file.id,file_name:filename,file_mime:mime,file_size:bytes.length,sha256:digest}}).eq('id',entry.id).eq('project_id',entry.project_id).eq('visibility','team');
     if(entry.updated_at)update=update.eq('updated_at',entry.updated_at);
     const saved=await update.select('id').maybeSingle();if(saved.error)throw Error('SERVER_ERROR');if(!saved.data)return reply(409,{error:'El entregable cambió durante la carga. Actualiza antes de intentar otra vez.'});
     return reply(200,{ok:true,entry_id:entry.id,file_name:filename});
@@ -236,12 +248,13 @@ function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access
    const r=await admin.from('portal_entries').select('id,project_id,visibility,data').eq('id',body.entry_id).maybeSingle();if(r.error)throw Error('SERVER_ERROR');const entry=r.data;
    if(!entry)return reply(404,{error:'Archivo no disponible'});
    const member=await admin.from('portal_members').select('user_id,project_id,role').eq('project_id',entry.project_id).eq('user_id',user.id).maybeSingle();if(member.error)throw Error('SERVER_ERROR');
-   if(!canRead(user.id,staff,member.data,entry))return reply(404,{error:'Archivo no disponible'});
+   const qaRead=qaOperator&&entry.project_id===QA_PROJECT&&entry.data?.qa_uploaded_by===user.id&&await qaOwnEntry(entry);
+   if(!canRead(user.id,staff||qaRead,member.data,entry))return reply(404,{error:'Archivo no disponible'});
    const binding=await admin.from('portal_drive_folders').select('folder_id').eq('project_id',entry.project_id).maybeSingle();if(binding.error)throw Error('SERVER_ERROR');
    const fileId=entry.data?.drive_file_id;if(!binding.data||!driveId(fileId))return reply(404,{error:'Archivo no disponible'});
    const folderId=binding.data.folder_id;
    if(!folderMatches(await meta(folderId),folderId,ROOT))throw Error('FILE_NOT_AVAILABLE');
-   const file=await meta(fileId);await within(fileId,folderId,meta);
+   const file=await meta(fileId);if(qaRead&&!staff&&file.appProperties?.umber_entry!==entry.id)return reply(404,{error:'Archivo QA no disponible'});await within(fileId,folderId,meta);
    if(!file.capabilities?.canDownload||file.mimeType==='application/vnd.google-apps.folder')return reply(403,{error:'Descarga no permitida'});
    if(Number(file.size||0)>MAX)return reply(413,{error:'El archivo supera 25 MB'});
    const native=['application/vnd.google-apps.document','application/vnd.google-apps.spreadsheet','application/vnd.google-apps.presentation'].includes(file.mimeType);

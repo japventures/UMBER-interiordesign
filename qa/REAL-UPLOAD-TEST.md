@@ -3,7 +3,7 @@
 ## Acceso que falta
 
 1. Herramienta de navegador operativa para abrir el portal y Supabase. No hay herramienta Browser/Computer Use disponible en el turno de preparación. El Chromium local tampoco inicia: `process_singleton_posix.cc`, `socket() failed: Operation not permitted (1)`. No se intentan cambios de flags, exposición de servidor ni rutas alternativas para eludir esa restricción.
-2. Sesión del equipo de Ana Paula o Melissa en el portal con su propio MFA AAL2. No se enrolan factores por ellas ni se usan claves, códigos o contraseñas copiados al chat. No se eleva a Jorge/QA a staff.
+2. Sesión administradora del portal con MFA AAL2. La coordinación informó después que Jorge inició sesión con su propio 2FA y que se le asignó portal_staff. Esa sesión puede servir para la prueba de equipo cuando esté disponible la herramienta de navegador. No modificar más roles ni enrolar factores en nombre de otras personas.
 3. Comprobar en Supabase la versión actual de `portal-drive` y desplegar, dentro de la autorización aplicable, la versión integrada preparada que añade upload y conserva los orígenes autorizados. El último despliegue comprobado aquí fue domain-only: no probar subida contra él suponiendo que ya incluye upload.
 4. Integrar la rama de proceso en el sitio de prueba y habilitar `guidedUploadEnabled` únicamente al completar las comprobaciones de backend. El archivo de configuración preparado continúa sin ese flag; no se activó nada.
 
@@ -11,7 +11,7 @@ No es necesario ampliar el alcance OAuth `drive.file`, cambiar permisos de Drive
 
 ## Código y reversión
 
-- Versión preparada del backend: `supabase/functions/portal-drive/index.ts`, SHA256 `fad96dfd9902f39a9cc43c14a616e4bbf18c0af70f1cce77a5b325385caea998`.
+- Versión preparada del backend: `supabase/functions/portal-drive/index.ts`, SHA256 `7509ac93f107d7d335b0b5e29c0a44def11387526239d46082dc274ae600dc7f`.
 - Se reconcilió con el paquete integrado ya revisado: upload y ajuste de dominio. No desplegar la copia anterior que sólo aceptaba el origen de GitHub.
 - Antes de desplegar: descargar la fuente alojada actual y compararla. Si contiene diferencias adicionales, detener ese paso y reconciliar. No sobrescribir cambios del trabajo de dominio.
 - Si se habilita el flag durante QA y falla la prueba, volver a deshabilitarlo. Conservar copia exacta de la función previa para reversión; no cambiar MFA, JWT, roles, RLS ni callbacks.
@@ -45,4 +45,26 @@ No verifica firmas electrónicas, pagos bancarios, invitaciones de Calendar ni i
 
 ## Resultado de preparación
 
-150 pruebas offline aprobadas tras reconciliar la función. La prueba visual preparada en `tests/five-stage-visual-browser.cjs` no pasó de iniciar Chromium; no se generaron capturas y no cuenta como QA visual aprobado. Prueba real no iniciada por los accesos y requisitos anteriores.
+158 pruebas offline aprobadas tras reconciliar la función. La prueba visual preparada en `tests/five-stage-visual-browser.cjs` no pasó de iniciar Chromium; no se generaron capturas y no cuenta como QA visual aprobado. Prueba real no iniciada por los accesos y requisitos anteriores.
+
+## Actualización de identidad y control
+
+Jorge ahora fue reportado como staff autorizado; por eso su sesión no sirve como prueba de aislamiento de un cliente sin privilegios. Para comprobar borradores y acceso de cliente debe usarse una identidad cliente distinta ya autorizada, en una sesión separada. Si no está disponible, se puede validar carga y visor como equipo, pero la comprobación de cliente queda pendiente. No retirar el rol nuevo de Jorge para simular cliente ni cambiar membresías.
+
+La herramienta de control de navegador sigue ausente del inventario disponible en este hilo, incluso después de que el entorno quedó listo. No se pudo inspeccionar la sesión ni comprobar el estado de Return control. No afirmar que devolver el control resuelve la ausencia de esa herramienta. La siguiente acción necesita que el hilo con el navegador conectado ejecute la prueba o que la herramienta vuelva a estar disponible aquí. No pedir otra contraseña, token o código 2FA.
+
+## Actualización autoritativa: alcance QA preparado
+
+La versión 7509ac93... reemplaza el paquete fad96dfd... para esta prueba: agrega una habilitación QA apagada por defecto y conserva CORS/dominio. No está desplegada por este trabajador.
+
+Antes de activar, el relevo debe confirmar el cambio concreto: desplegar sólo portal-drive; poner PORTAL_QA_UPLOAD_ENABLED=true en el servidor; publicar guidedUploadEnabled=true y guidedUploadProjectIds=["e2e00000-0000-4000-8000-000000000001"] en el frontend. El código comprometido conserva guidedUploadEnabled=false y el servidor permanece deshabilitado si falta su flag. No afirmar activación por integrar la rama.
+
+Con esa habilitación, todas las cargas (incluidas las de AP/Melissa) se restringen al proyecto QA asignado. La excepción de Jorge requiere identidad exacta, AAL2, portal_staff vigente y auditoría INSERT del entregable a su nombre. Sólo puede subir a un borrador nuevo sin adjuntos ni enlaces previos. No puede usar Picker, OAuth, verify_root ni create_qa. No se cambia TEAM_EMAILS ni el propietario corporativo de la conexión.
+
+Para revisar su archivo privado, se exige además qa_uploaded_by, auditoría de creación propia y appProperties.umber_entry de Drive coincidente con el ID del entregable. Cambiar un enlace o ID en el JSON no concede acceso a un archivo ajeno. No se amplía su lectura de otros proyectos. Esta restricción corresponde a la función Drive; su rol portal_staff ya concedido por la coordinación mantiene sus permisos de datos del portal y no se modifica aquí.
+
+El entregable de prueba debe crearse NUEVO usando la sesión de Jorge; no reutilizar los fixtures creados por otra identidad. La carga guiada puede preparar las etapas que falten únicamente dentro del proyecto ficticio; registrar sus IDs y conservarlos, sin borrar ni reclasificar contenido. Si falta el rastro de auditoría INSERT, detenerse y revisar el trigger existente; no reemplazarlo por un campo editable del navegador.
+
+Al concluir o fallar QA: poner primero PORTAL_QA_UPLOAD_ENABLED=false y guidedUploadEnabled=false. Confirmar que una nueva carga se rechaza y que la lectura excepcional de borradores por Jorge deja de estar habilitada. Conservar archivo y registro privados para evidencia; no cambiar membresías ni borrar archivos. Los accesos de cliente publicados previamente autorizados conservan su comportamiento existente.
+
+CNAME de main se incorpora sin cambios a la rama. En el momento de preparar este cambio, main era e672b6e y su único cambio desde 6e98d62 era CNAME. No se actualiza main ni se despliega desde este trabajo. Revalidar head antes de integrar.
