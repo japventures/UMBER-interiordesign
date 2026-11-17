@@ -1,0 +1,10 @@
+UMBER — proceso de cinco etapas
+Base: main 6e98d62c034cce2e6c8ec01bceaf3991a40c9769.
+Primer acercamiento; Cotización y contratación; Diseño conceptual; Desarrollo ejecutivo; Implementación y montaje. Look & Feel (layouts y moodboard) se confirma antes de mobiliario/3D/renders.
+Carga: proyecto → etapa → paso → archivo, espacio y nota opcionales. Asignación automática de tipo, título, orden, versión y vínculo a etapa. Todo archivo nuevo queda privado y en borrador.
+Las confirmaciones son registros manuales del estudio con usuario, fecha, nota, documento de respaldo e historial; no son firma electrónica, validación bancaria ni decisiones hechas en nombre del cliente. Cambio de archivo o versión base invalida la confirmación anterior. Estas reglas guían el flujo del equipo; no sustituyen controles de autorización del servidor.
+Los proyectos con plantilla anterior siguen usando sus ocho etapas. Preparar cinco etapas requiere acción explícita: conserva IDs, archivos, compras e historial en Plan anterior conservado. No hay migración destructiva ni SQL nuevo.
+Compras se reutiliza; no se duplica captura de artículos.
+Documento existente actualizado por UI con la sesión AP, guardado y texto verificado. No se cambiaron permisos. Conector devolvió 403; navegador permitió editar.
+Pruebas offline: 134 aprobadas, incluidas invalidación de aprobación, aislamiento por proyecto y conservación/resumen del flujo anterior. Sin prueba visual del código nuevo ni carga real: backend de subida guiada continúa pendiente de despliegue/activación y prueba staff AAL2. No se editaron Supabase, MFA, roles, DNS, dominio ni credenciales.
+Calendar: sólo investigación; ningún permiso o integración activado. Propuesta: eventos seleccionados por proyecto y publicación explícita de campos mínimos. Evitar iframe de calendario completo y sincronización por búsqueda de nombre. Leer todos los eventos con calendar.events.readonly requiere autorización nueva; drive.file actual no cubre Calendar. Ver documentación oficial https://developers.google.com/workspace/calendar/api/auth y https://developers.google.com/workspace/calendar/api/guides/extended-properties
