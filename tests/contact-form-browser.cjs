@@ -2,7 +2,7 @@
 // CHROMIUM_PATH=/usr/bin/chromium node tests/contact-form-browser.cjs
 const {chromium}=require('playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),endpoint='https://formspree.io/f/mzerpbpg';
+const root=path.resolve(__dirname,'..'),endpoint='https://formspree.io/f/xzerrpew';
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.webp':'image/webp'};
 async function fixture(browser,origin,prefix,{javaScriptEnabled=true,blockApp=false,viewport={width:1440,height:1000}}={}){
  const context=await browser.newContext({javaScriptEnabled,viewport}),requests=[],unexpected=[],errors=[];

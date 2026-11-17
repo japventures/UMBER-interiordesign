@@ -7,7 +7,7 @@ const vm=require('node:vm');
 const root=path.resolve(__dirname,'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const source=read('app.js');
-const endpoint='https://formspree.io/f/mzerpbpg';
+const endpoint='https://formspree.io/f/xzerrpew';
 function fixture(){
  const field=(name,value,type='text',required=true)=>({name,value,type,required,maxLength:200,checked:false,message:'',get validity(){return {typeMismatch:type==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)};},setCustomValidity(message){this.message=message;}});
  const inputs=[field('Full Name / Company Name','Example QA'),field('Last name','','text',false),field('Project Address','123 Example Street'),field('Project City','Example city'),field('Phone','+1 (832) 555-0100','tel'),field('email','qa@example.invalid','email'),field('Approximate Square Footage','125.5','number'),field('How did you hear about us?','QA'),field('message','Fictional local test','textarea',false),field('_gotcha','','text',false)];
@@ -94,7 +94,7 @@ test('Runtime and static ES/EN markup use safe POST defaults and no-JS protectio
   for(const prefix of ['const esc=','const field=','function contact()'])vm.runInContext(source.split('\n').find(line=>line.startsWith(prefix)),context);
   const runtime=context.contact(),staticPage=read((locale==='es'?'es/':'')+'contact/index.html');
   assert.equal(staticPage.match(/<main id="main">([\s\S]*?)<\/main>/)[1],runtime);
-  assert.match(runtime,/<form data-contact method="post" action="https:\/\/formspree.io\/f\/mzerpbpg"/);assert.match(runtime,/<fieldset class="contact-fields" disabled>/);assert.match(runtime,/<button class="outline" type="submit" disabled>/);assert.match(runtime,/name="email" type="email" required/);assert.match(runtime,/name="language" value="(?:en|es)"/);assert.match(runtime,/name="_gotcha"/);assert.match(runtime,/aria-live="polite"/);assert.match(runtime,/mailto:info@umberinteriordesign.com/);assert.ok(!runtime.includes('Preview only'));
+  assert.match(runtime,/<form data-contact method="post" action="https:\/\/formspree.io\/f\/xzerrpew"/);assert.match(runtime,/<fieldset class="contact-fields" disabled>/);assert.match(runtime,/<button class="outline" type="submit" disabled>/);assert.match(runtime,/name="email" type="email" required/);assert.match(runtime,/name="language" value="(?:en|es)"/);assert.match(runtime,/name="_gotcha"/);assert.match(runtime,/aria-live="polite"/);assert.match(runtime,/mailto:info@umberinteriordesign.com/);assert.ok(!runtime.includes('Preview only'));
  }
  assert.ok(!source.includes('localStorage'));assert.ok(!source.includes('bindContactPreview'));
 });
