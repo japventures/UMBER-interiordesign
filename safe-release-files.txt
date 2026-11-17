@@ -55,3 +55,9 @@ tests/safe-release.test.cjs
 safe-release-files.txt
 tests/project-private-default.test.cjs
 tests/guided-workflow.test.cjs
+work-budget-approvals.js
+tests/compact-portal.test.cjs
+tests/work-budget-approvals.test.cjs
+tests/work-budget-journey.test.cjs
+tests/website-no-emoji.test.cjs
+tests/work-budget-disabled.test.cjs

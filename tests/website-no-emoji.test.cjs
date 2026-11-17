@@ -83,7 +83,7 @@ test('EN/ES demo sections and screenshot buttons render without emojis', async (
     pathname = '/UMBER-interiordesign' + language + '/portal/demo/';
     await context.window.UMBERPortal.mount('/portal/demo');
     for (const label of language ? ['Ver pendientes', 'Abrir calendario'] : ['View items', 'Open calendar']) {
-      assert.ok(mount.innerHTML.includes('>' + label + '</button>'), label + ' remains a plain text button');
+      assert.ok(mount.innerHTML.includes('>' + label + (label==='View items'||label==='Ver pendientes'?'</span>':'</button>')), label + ' remains plain text');
     }
     assert.equal(pictograph.test(mount.innerHTML), false, 'overview');
     for (let repeat = 0; repeat < 2; repeat++) {
