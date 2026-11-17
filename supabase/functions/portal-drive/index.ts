@@ -1,3 +1,10 @@
+// Explicit origins only; unset configuration preserves the existing preview deployment.
+function portalOrigins(env){
+ const raw=env('PORTAL_ALLOWED_ORIGINS');
+ const entries=(raw===undefined||raw===null||raw===''?'https://japventures.github.io':raw).split(',').map(s=>s.trim());
+ const known=new Set(['https://japventures.github.io','https://umberinteriordesign.com','https://www.umberinteriordesign.com']);
+ return new Set(entries.filter(value=>known.has(value)));
+}
 function verifiedMfa(token,user){
  // Call only after Supabase auth.getUser(token) validates this same JWT.
  try{const part=token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');const claims=JSON.parse(atob(part));return claims.sub===user.id&&claims.aal==='aal2';}catch{return false;}
@@ -95,11 +102,13 @@ async function uploadBody(req){
 function makeFileHandler({createClient,OAuth2Client,env,security,jsonBody,access,fetchImpl=fetch}){
  const {oauthConfig,open,hash,TEAM_EMAILS}=security;
  const {ROOT,SHARED_DRIVE,QA_PROJECT,OTHER_PROJECT,QA_USER,FIXTURES,QA_TEXT,driveId,uuid,canRead,folderMatches,within,safeName}=access;
- const ORIGIN='https://japventures.github.io',MAX=25*1024*1024;
+ const origins=portalOrigins(env),MAX=25*1024*1024;
  return async req=>{
+  const requestedOrigin=req.headers.get('origin');
+  const ORIGIN=requestedOrigin&&origins.has(requestedOrigin)?requestedOrigin:'';
   const headers={'Content-Type':'application/json','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Access-Control-Allow-Origin':ORIGIN,'Access-Control-Allow-Headers':'authorization, apikey, content-type, x-client-info','Access-Control-Allow-Methods':'POST, OPTIONS','Access-Control-Expose-Headers':'Content-Disposition','Vary':'Origin'};
   const reply=(status,data)=>new Response(JSON.stringify(data),{status,headers});
-  if(req.headers.get('origin')&&req.headers.get('origin')!==ORIGIN)return reply(403,{error:'Origin not allowed'});
+  if(requestedOrigin&&!origins.has(requestedOrigin))return reply(403,{error:'Origin not allowed'});
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
   if(req.method!=='POST')return reply(405,{error:'Use POST'});
   const bearer=(req.headers.get('authorization')||'').replace(/^Bearer /i,'');if(!bearer)return reply(401,{error:'Inicia sesión en el portal'});
