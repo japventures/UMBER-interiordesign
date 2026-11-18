@@ -8,6 +8,7 @@ async function loadPrivateReview(plan,{apply=false,projectId,group='all',onProgr
  if(!(await api.projects()).some(p=>p.id===PROJECT))throw Error('EXPECTED_PROJECT_NOT_VISIBLE');
  const state=await api.projectData(PROJECT);if(!Array.isArray(state.members)||state.members.length||state.entries.some(e=>e.project_id!==PROJECT||e.visibility!=='team'))throw Error('PROJECT_PRIVACY_PRECHECK_FAILED');
  const fileId=value=>{try{return new URL(value).pathname.match(/\/(?:d|folders)\/([A-Za-z0-9_-]+)/)?.[1]||null;}catch{return null;}};
+ const canonical=value=>JSON.stringify(value,(_key,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
  const empty=v=>v===null||v===undefined||v==='';
  const stages=new Map(state.entries.filter(e=>e.kind==='stage').map(e=>[e.data?.workflow_phase,e.id]));
  const changes=[],snapshots=[];let skipped=0;
@@ -38,7 +39,7 @@ async function loadPrivateReview(plan,{apply=false,projectId,group='all',onProgr
     merged[key]=value;
    }
    const marker='[Fuente de revisión '+d.review_key+']',description=(old.description||'').includes(marker)?old.description:(old.description||'')+'\n\n'+marker+'\n'+input.description;
-   if(JSON.stringify(merged)===JSON.stringify(old.data||{})&&description===old.description){skipped++;continue;}
+   if(canonical(merged)===canonical(old.data||{})&&description===old.description){skipped++;continue;}
    snapshots.push({id:old.id,project_id:PROJECT,description:old.description,data:JSON.parse(JSON.stringify(old.data||{}))});
    changes.push({operation:'update',group:op.group,id:old.id,source_row:d.source_row,source_sheet:d.source_sheet,payload:{id:old.id,description,data:merged}});
   }else changes.push({operation:'insert',group:op.group,source_row:d.source_row,source_sheet:d.source_sheet,payload:{...input,description:'[Fuente de revisión '+d.review_key+']\n'+input.description,data:d,project_id:PROJECT}});
