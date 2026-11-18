@@ -233,3 +233,5 @@ dialog.up-dialog{height:fit-content;min-height:0;box-sizing:border-box;margin:au
 .up-sheet-photo button{display:block;padding:0;border:0;background:transparent;width:30px;height:30px;cursor:pointer}
 .up-sheet-photo img{display:block;width:30px;height:30px;object-fit:contain}
 .up-sheet-product-link{font-size:11px;text-decoration:underline;text-underline-offset:3px}
+
+.up-currency-button{display:inline-flex;align-items:center;max-width:100%;border:1px solid #bdb3a6;background:transparent;color:inherit;font:inherit;font-size:11px;line-height:1.2;padding:4px 6px;min-height:26px;cursor:pointer}.up-currency-button:hover{background:#eee9df}.up-currency-button:focus-visible{outline:2px solid #967b55;outline-offset:2px}@media(pointer:coarse){.up-currency-button{min-height:40px}}
