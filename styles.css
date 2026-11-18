@@ -203,3 +203,20 @@ body main>.cta>.outline{font-size:14px;line-height:1.3;margin:0;padding:10px 16p
 body main>.cta p{font-size:13px;line-height:1.5;margin:0}
 body main .process-section{padding-bottom:28px}
 @media(max-width:750px){body main>.cta{padding:20px 24px;gap:12px}body main>.cta h2{font-size:22px}}
+
+/* Compact contact form; retain usable controls and existing validation. */
+body .contact{grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr);gap:32px;align-items:start}
+body .contact>div>a{font-size:14px;line-height:1.5;margin:0 0 10px}
+body .contact form{font-size:13px;line-height:1.4;min-width:0}
+body .contact .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px}
+body .contact form label{font-size:12px;line-height:1.4;margin:0 0 10px}
+body .contact input:not([type=checkbox]),body .contact textarea{box-sizing:border-box;font-size:14px;line-height:1.4;padding:5px 0;margin:3px 0 0;min-height:34px}
+body .contact textarea{min-height:80px;max-height:220px}
+body .contact form fieldset{margin:0 0 12px;padding:0;min-width:0}
+body .contact form>.contact-fields{margin:0}
+body .contact form legend{font-size:12px;line-height:1.4;margin:0 0 6px;padding:0}
+body .contact form .check{display:inline-flex;align-items:center;gap:5px;margin:0 16px 4px 0;min-height:28px;font-size:12px}
+body .contact .check input{margin:0;width:15px;height:15px;flex-shrink:0}
+body .contact form button.outline{font-size:13px;line-height:1.3;padding:10px 18px;margin:4px 0 0}
+body .contact .form-note,body .contact .form-unavailable,body .contact .form-status{font-size:11px;line-height:1.5;margin:8px 0 0}
+@media(max-width:750px){body .contact{grid-template-columns:1fr;gap:18px}body .contact .form-grid{grid-template-columns:1fr;gap:4px}body .contact input:not([type=checkbox]){min-height:40px}body .contact form .check{min-height:40px}}
