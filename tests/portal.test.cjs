@@ -21,7 +21,7 @@ async function submit(type,values){const form={dataset:{upForm:type},values,clos
  const key=Buffer.from(JSON.stringify({role:'service_role'})).toString('base64');context.window.UMBER_PORTAL_CONFIG={enabled:true,supabaseUrl:'https://test.supabase.co',publishableKey:'header.'+key+'.signature'};assert.equal(S.configured(),false,'Secret role keys rejected');
  context.window.UMBER_PORTAL_CONFIG={enabled:false};
  path='/UMBER-interiordesign/es/portal/';await P.mount('/portal');assert.ok(html().includes('ACCESO AÚN NO HABILITADO'));assert.ok(!html().includes('name="password"'),'No credential collection before configuration');
- path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMOSTRACIÓN'));assert.ok(html().includes('PENDIENTES POR REVISAR'));assert.ok(html().includes('Diseño conceptual'));assert.ok(html().includes('The Woodlands'));assert.ok(!html().includes('Presupuesto interno de ejemplo'));
+ path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMOSTRACIÓN'));assert.ok(html().includes('TAREAS POR REVISAR'));assert.ok(html().includes('Diseño conceptual'));assert.ok(html().includes('The Woodlands'));assert.ok(!html().includes('Presupuesto interno de ejemplo'));
  for(const tab of ['stages','calendar','documents','design','selections','invoices','updates','messages']){await click('[data-up-tab]',{upTab:tab});assert.ok(html().includes('data-up-tab="'+(tab==='design'?'documents':tab)+'" aria-current="page"'),tab+' renders');assert.ok(!/undefined|NaN/.test(html()),tab+' has valid output');}
  await click('[data-up-tab]',{upTab:'stages'});assert.ok(html().includes('up-stage-roadmap'));assert.ok(html().includes('<progress'));assert.ok(html().includes('etapas completadas'));assert.ok(html().includes('no representa porcentaje físico'));
  await click('[data-up-tab]',{upTab:'documents'});assert.ok(html().includes('Abre tus archivos aquí, sin descargarlos.'));assert.ok(!html().includes('data-up-tab="design"'));assert.ok(html().includes('Render'));
@@ -44,7 +44,7 @@ async function submit(type,values){const form={dataset:{upForm:type},values,clos
  await submit('invite',{email:'fake@example.test',role:'client'});assert.ok(html().includes('No se envió ningún correo'));
  await change('up-project','demo-hospitality');await click('[data-up-tab]',{upTab:'design'});assert.ok(html().includes('Concepto restaurante'));assert.ok(!html().includes('Sala principal'),'Project switch does not leak previous entries');
  await click('[data-up-role]');assert.ok(!html().includes('data-up-tab="team"'));
- path='/UMBER-interiordesign/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMONSTRATION'));assert.ok(html().includes('ITEMS TO REVIEW'));assert.ok(html().includes('NEXT APPOINTMENT'));
+ path='/UMBER-interiordesign/portal/demo/';await P.mount('/portal/demo');assert.ok(html().includes('DEMONSTRATION'));assert.ok(html().includes('TASKS TO REVIEW'));assert.ok(html().includes('NEXT APPOINTMENT'));
  await P.mount('/');assert.ok(!bodyClasses.has('umber-portal-page'));
  // Workflow references use fictional data and must not expose team-only records.
  path='/UMBER-interiordesign/es/portal/demo/';await P.mount('/portal/demo');

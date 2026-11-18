@@ -211,3 +211,25 @@ dialog.up-dialog{height:fit-content;min-height:0;box-sizing:border-box;margin:au
 .umber-portal-page .up-auth-card>.up-muted{font-size:11px;line-height:1.5;margin:8px 0 4px}
 .umber-portal-page .up-auth-card>a:last-child{font-size:12px;overflow-wrap:anywhere}
 @media(max-width:750px){.umber-portal-page .up-auth:has(>.up-auth-copy){grid-template-columns:1fr;max-width:480px;gap:20px;padding:20px 0 28px}.umber-portal-page .up-auth-copy h1{font-size:28px!important}.umber-portal-page .up-auth-card input{height:44px}.umber-portal-page .up-auth-card form>.up-primary{min-height:44px}}
+
+/* Furniture sheet: separate photo, supplier and product-link columns. */
+.up-sheet-grid{min-width:1240px}
+.up-sheet-grid thead th:nth-child(n){width:auto}
+.up-sheet-grid thead th:nth-child(1){width:44px}
+.up-sheet-grid thead th:nth-child(2){width:180px}
+.up-sheet-grid thead th:nth-child(3){width:80px}
+.up-sheet-grid thead th:nth-child(4){width:110px}
+.up-sheet-grid thead th:nth-child(5){width:48px}
+.up-sheet-grid thead th:nth-child(6){width:44px}
+.up-sheet-grid thead th:nth-child(7){width:76px}
+.up-sheet-grid thead th:nth-child(8){width:90px}
+.up-sheet-grid thead th:nth-last-child(4){width:100px}
+.up-sheet-grid thead th:nth-last-child(3){width:100px}
+.up-sheet-grid thead th:nth-last-child(2){width:110px}
+.up-sheet-grid thead th:last-child{width:180px}
+.up-sheet-grid.up-sheet-full{min-width:1700px}
+.up-sheet-grid.up-sheet-full thead th:nth-child(n+8):nth-last-child(n+5){width:90px}
+.up-sheet-grid .up-sheet-photo{padding:3px 5px;text-align:center}
+.up-sheet-photo button{display:block;padding:0;border:0;background:transparent;width:30px;height:30px;cursor:pointer}
+.up-sheet-photo img{display:block;width:30px;height:30px;object-fit:contain}
+.up-sheet-product-link{font-size:11px;text-decoration:underline;text-underline-offset:3px}
