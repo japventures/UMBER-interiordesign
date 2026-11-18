@@ -182,3 +182,16 @@ body:not(.umber-portal-page) main .service-offerings .service-grid h2{position:s
 
 /* Consistent interior page headings, matching Contact. */
 body .page>h1,body .page .page-heading h1,body .process-section .page-heading h2{font-family:var(--umber-body-font);font-size:28px;font-weight:300;line-height:1.2;text-align:left;letter-spacing:-.025em}
+
+/* Compact closing call-to-action and footer. */
+body main .minimal-contact{display:flex;align-items:center;justify-content:space-between;gap:16px 28px;padding:24px 6vw;margin:0;border-top:1px solid var(--line)}
+body main .minimal-contact h2{font-size:24px;line-height:1.2;margin:0}
+body main .minimal-contact .text-link{flex-shrink:0;margin:0;padding:6px 0;font-size:14px}
+body>footer{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px 28px;max-width:none;margin:0;padding:24px 6vw;font-size:13px;line-height:1.5}
+body>footer>div{min-width:0}
+body>footer p{margin:4px 0 0;font-size:12px;line-height:1.5}
+body>footer nav{grid-column:2;grid-row:1 / span 2;max-width:none;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px 18px;margin:0;font-size:11px}
+body>footer .instagram-follow{grid-column:1;display:block;max-width:none;min-width:0;margin:0;padding:0;border:0}
+body>footer .instagram-follow>div{display:none}
+body>footer .instagram-follow>a{font-size:12px;line-height:1.4;min-height:0;margin:0;padding:3px 0;border:0}
+@media(max-width:750px){body main .minimal-contact{padding:20px 24px;gap:12px;flex-wrap:wrap}body main .minimal-contact h2{font-size:22px}body>footer{grid-template-columns:1fr;padding:20px 24px;gap:10px}body>footer nav{grid-column:1;grid-row:auto;justify-content:flex-start;gap:8px 16px}body>footer .instagram-follow{grid-column:1}}
