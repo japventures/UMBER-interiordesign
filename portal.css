@@ -190,3 +190,24 @@ dialog.up-dialog{height:fit-content;min-height:0;box-sizing:border-box;margin:au
 .umber-portal-page .up-purchase-table td a{display:inline-block;margin:3px 5px 3px 0}
 .umber-portal-page .up-sheet-grid tr.up-sheet-row{height:38px}
 .umber-portal-page .up-sheet-grid tr.up-sheet-row>th,.umber-portal-page .up-sheet-grid tr.up-sheet-row>td{padding:4px 6px;height:auto;line-height:1.25}
+
+/* Compact portal sign-in composition. */
+.umber-portal-page .up-auth:has(>.up-auth-copy){max-width:960px;width:calc(100% - 48px);margin:0 auto;padding:28px 0 36px;grid-template-columns:minmax(0,1fr) minmax(300px,400px);gap:32px;align-items:start}
+.umber-portal-page .up-auth-copy>.eyebrow{font-size:11px;margin:0 0 10px}
+.umber-portal-page .up-auth-copy h1{font-size:32px!important;line-height:1.15;margin:0 0 14px!important}
+.umber-portal-page .up-auth-copy>p:not(.eyebrow){font-size:14px;line-height:1.55;margin:0;max-width:420px}
+.umber-portal-page .up-auth-points{gap:8px;margin-top:20px;padding-top:14px;font-size:11px}
+.umber-portal-page .up-auth .up-auth-card{padding:20px;margin:0}
+.umber-portal-page .up-auth-card>.eyebrow{font-size:11px;line-height:1.3;margin:0 0 8px}
+.umber-portal-page .up-auth .up-auth-card h2{font-size:23px;line-height:1.2;margin:0 0 16px}
+.umber-portal-page .up-auth-card form{margin:0}
+.umber-portal-page .up-auth-card label{font-size:12px;line-height:1.4;margin:0 0 12px}
+.umber-portal-page .up-auth-card input{height:40px;min-height:40px;padding:7px 10px;font-size:14px;line-height:1.4;margin:4px 0 0;box-sizing:border-box}
+.umber-portal-page .up-auth-card form>.up-primary{font-size:12px;min-height:38px;padding:8px 16px;margin:2px 0 0}
+.umber-portal-page .up-auth .up-auth-card details{margin:14px 0 0;padding:0}
+.umber-portal-page .up-auth .up-auth-card summary{font-size:12px;line-height:1.4;padding:10px 0;margin:0}
+.umber-portal-page .up-auth-card details form{margin-top:10px}
+.umber-portal-page .up-auth-card .up-demo-link{font-size:12px;line-height:1.4;margin-top:14px;padding-top:12px}
+.umber-portal-page .up-auth-card>.up-muted{font-size:11px;line-height:1.5;margin:8px 0 4px}
+.umber-portal-page .up-auth-card>a:last-child{font-size:12px;overflow-wrap:anywhere}
+@media(max-width:750px){.umber-portal-page .up-auth:has(>.up-auth-copy){grid-template-columns:1fr;max-width:480px;gap:20px;padding:20px 0 28px}.umber-portal-page .up-auth-copy h1{font-size:28px!important}.umber-portal-page .up-auth-card input{height:44px}.umber-portal-page .up-auth-card form>.up-primary{min-height:44px}}
