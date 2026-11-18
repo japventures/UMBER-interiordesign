@@ -179,3 +179,6 @@ body:not(.umber-portal-page) main .service-offerings .service-grid h2{position:s
 .instagram-follow>a{font-size:14px}
 @media(max-width:850px){.service-offerings .service-grid{grid-template-columns:1fr}.service-offerings .service-grid article{padding:24px}}
 @media(max-width:600px){.instagram-follow{align-items:flex-start;flex-direction:column;gap:4px}}
+
+/* Consistent interior page headings, matching Contact. */
+body .page>h1,body .page .page-heading h1,body .process-section .page-heading h2{font-family:var(--umber-body-font);font-size:28px;font-weight:300;line-height:1.2;text-align:left;letter-spacing:-.025em}
